@@ -37,7 +37,7 @@
       ${body}
       <div class="smc-note"><div class="wrap">
         <b>AI KOREA Co., Ltd.</b> | ${esc(C.meta.partner_label)} | Contact ${esc(C.meta.quote_email)}<br>
-        가격은 문의 시 안내합니다. 사양 데이터 기준일 ${esc(C.meta.updated)}.
+        Pricing on request. Specification data as of ${esc(C.meta.updated)}.
       </div></div>`;
     { const top = app.getBoundingClientRect().top + window.pageYOffset; if (window.pageYOffset > top) window.scrollTo(0, top); }
   }
@@ -50,11 +50,11 @@
     const uses = C.use_cases.map(u => `<a class="card" href="#/products?use=${u.id}"><h3>${esc(u.name)}</h3><p>${esc(u.desc)}</p></a>`).join("");
     shell("Overview", `
       <section class="hero"><div class="wrap">
-        <p class="intro">Pick a model and change the CPU, memory, GPU and storage yourself to see at once whether the configuration is valid, with estimated power and lead time. For high-density GPU servers we also propose the liquid cooling (DLC) design.</p>
+        <p class="intro">Pick a model and change the CPU, memory, GPU and storage yourself to check right away whether the configuration is valid and how much power it needs. For high-density GPU servers we also propose a liquid cooling (DLC) design.</p>
         <a class="btn sky" href="#/products">Build Your Server</a> <a class="btn ghost" href="#/downloads">Download catalog</a>
         <div class="stats">
           <div><b>${ALL.length.toLocaleString()} models</b><small>Full Supermicro lineup</small></div>
-          <div><b>Real time</b><small>Configuration check, lead time</small></div>
+          <div><b>Real time</b><small>Configuration check, power estimate</small></div>
           <div><b>Power, heat</b><small>Rack-level kW calculated automatically</small></div>
           <div><b>EPC link</b><small>DLC, CDU and piping design</small></div>
         </div>
@@ -116,7 +116,7 @@
           <h4>Other</h4>${cb("gpu", "y", "Models with GPU")}${cb("dlc", "y", "DLC (liquid cooling) ready")}
           <p style="margin:14px 0 0"><a class="btn ghost sm" href="#/products">Reset filters</a></p>
         </aside>
-        <div><p class="sub" style="margin:0 0 12px">${list.length} models / price on request</p>
+        <div><p class="sub" style="margin:0 0 12px">${list.length} models / price and lead time on request</p>
           <div class="grid g3">${cards}</div></div>
       </div></div>`);
     $("#flt").addEventListener("change", () => {
@@ -147,7 +147,7 @@
           <p style="color:var(--ink-2)">${esc(m.summary)}</p>
           <div class="card" style="margin:18px 0">
             <div class="row2" style="display:flex;justify-content:space-between"><span>Price</span><b class="price">${smcPrice(m.id)}</b></div>
-            <div class="row2" style="display:flex;justify-content:space-between;margin-top:6px"><span>Estimated lead time</span><b>${startLead(m)}</b></div>
+            <div class="row2" style="display:flex;justify-content:space-between;margin-top:6px"><span>Lead time</span><b>${startLead(m)}</b></div>
             <p style="font-size:12px;margin-top:10px">${smcNote(m.id)}</p>
             <p style="margin-top:14px"><a class="btn" href="#/configure/${m.id}">Configure this model</a></p>
           </div>
@@ -277,7 +277,7 @@
     const p = priceTxt !== undefined ? priceTxt : "";
     return `<label class="opt ${sel ? "sel" : ""} ${disabled ? "dis" : ""}">
       <input type="${type}" name="${name}" value="${id}" ${sel ? "checked" : ""} ${disabled ? "disabled" : ""}>
-      <div><div class="t">${esc(it.name || id)}</div><div class="d">${esc(it.desc || "")}${it.lead > 2 ? ` · parts lead time ${it.lead} wk` : ""}</div>${extra}</div>
+      <div><div class="t">${esc(it.name || id)}</div><div class="d">${esc(it.desc || "")}</div>${extra}</div>
       <div class="p">${p}${it.price && type !== "checkbox" && name !== "cpu" ? "" : ""}</div></label>`;
   }
   const qtyBox = (k, v) => `<span class="qty"><button data-q="${k}" data-d="-1">−</button><span>${v}</span><button data-q="${k}" data-d="1">+</button></span>`;
@@ -360,7 +360,7 @@
       <div class="bd">${t.L.map(l => `<div class="line"><span>${esc(l.label)}${l.qty > 1 ? " x" + l.qty : ""}</span><span>${onReq ? "" : l.it.price ? man(l.it.price * l.qty) : "Included"}</span></div>`).join("")}</div>
       <div class="ft">
         <div class="row2"><span>Qty</span><b>${S.units} unit${S.units > 1 ? "s" : ""}</b></div>
-        <div class="row2"><span>Estimated lead time</span><b>${t.lead[0]}~${t.lead[1]} wk</b></div>
+        <div class="row2"><span>Lead time</span><b>Request a quote</b></div>
         <div class="row2"><span>Estimated power</span><b>${won(t.w)} W/unit</b></div>
         <div style="margin-top:8px;font-size:13px;color:var(--ink-3)">Price</div>
         <div class="big">${smcPrice(m.id, 1)}</div>${smcKrw(m.id)}${smcPriceSubCfg(m.id)}
@@ -441,7 +441,7 @@
     const keep = S; S = defaults(m); const t = totals().unit; S = keep; return t;
   }
   function startLead(m) {
-    const keep = S; S = defaults(m); const l = totals().lead; S = keep; return `${l[0]}~${l[1]} wk`;
+    return "Request a quote";
   }
   
   function leadForm(withNeed = true) {
@@ -456,11 +456,11 @@
   function quoteModal() {
     const m = M(), t = totals();
     openModal(`<h2 style="margin-top:0">Request a Quote</h2>
-      <p class="sub">${esc(m.sku)} x ${S.units} unit${S.units > 1 ? "s" : ""} / ${smcQuoteLine(m.id)} / Lead time ${t.lead[0]}~${t.lead[1]} wk<br>The configuration and its link are sent to our team. We reply within one business day.</p>
+      <p class="sub">${esc(m.sku)} x ${S.units} unit${S.units > 1 ? "s" : ""} / ${smcQuoteLine(m.id)}<br>The configuration and its link are sent to our team. We reply within one business day.</p>
       ${leadForm(true)}`, null, () => {
       const f = Object.fromEntries(new FormData($("#lf")));
       const body = [`[Web configurator quote request]`, `Company: ${f.co} / Contact: ${f.nm} / ${f.em} / ${f.tel || ""}`, `Requested delivery: ${f.due || "-"} / Site: ${f.site}`, `Model: ${m.sku} x ${S.units} unit${S.units > 1 ? "s" : ""}`,
-        ...t.L.map(l => `- ${l.label}${l.qty > 1 ? " x" + l.qty : ""}`), `Lead time ${t.lead[0]}~${t.lead[1]} wk / ${t.w} W/unit`, `Request: ${f.memo || "-"}`, `Configuration link: ${location.href}`].join("\n");
+        ...t.L.map(l => `- ${l.label}${l.qty > 1 ? " x" + l.qty : ""}`), `${t.w} W/unit`, `Request: ${f.memo || "-"}`, `Configuration link: ${location.href}`].join("\n");
       location.href = `mailto:${C.meta.quote_email}?subject=${encodeURIComponent("[Server quote request] " + f.co + " / " + m.sku)}&body=${encodeURIComponent(body)}`;
     });
   }
@@ -597,7 +597,7 @@
           <p style="color:var(--ink-2)">${esc(m.sum || "")}</p>
           <div class="card" style="margin:18px 0">
             <div class="row2" style="display:flex;justify-content:space-between"><span>Price</span><b class="price">${smcPrice(m.id)}</b></div>${smcPriceSub(m.id)}
-            <div class="row2" style="display:flex;justify-content:space-between;margin-top:6px"><span>Lead time</span><b>Provided after configuration is confirmed</b></div>
+            <div class="row2" style="display:flex;justify-content:space-between;margin-top:6px"><span>Lead time</span><b>Request a quote</b></div>
             <p style="font-size:12px;margin-top:10px">Choose the CPU, memory, drives and other specifications you need and our team will reply with a quote.</p>
             <p style="margin-top:14px"><a class="btn" href="#/configure/${m.id}">${m.part ? "Request a quote for this product" : "Configure this model"}</a></p>
           </div>
@@ -1032,7 +1032,7 @@ if (typeof module !== "undefined" && module.exports) module.exports = createSmcR
         ${L.slice(1).map(l => `<div class="line"><span>${esc(l.p.d)}${l.qty > 1 ? " x" + l.qty : ""}</span><span></span></div>`).join("")}</div>
       <div class="ft">
         <div class="row2"><span>Qty</span><b>${K.units} ${K.units > 1 ? "units" : "unit"}</b></div>
-        <div class="row2"><span>Lead time</span><b>Provided with quote</b></div>
+        <div class="row2"><span>Lead time</span><b>Request a quote</b></div>
         <div class="row2"><span>Estimated power</span><b>${won(kWatts())}W/${K.d.nodes > 1 ? "node" : "unit"}</b></div>
         <div style="margin-top:8px;font-size:13px;color:var(--ink-3)">Price</div>
         <div class="big">${smcPrice(K.id, 1)}</div>${smcKrw(K.id)}${smcPriceSubCfg(K.id)}

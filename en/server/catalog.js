@@ -11,7 +11,7 @@ window.CATALOG = {
     lead_buffer_weeks: 2,      
     psu_headroom: 1.2,         
     air_limit_kw_per_rack: 20, 
-    disclaimer: "Lead time and power are estimates for reference. Final pricing and lead time are confirmed in a formal quote.",
+    disclaimer: "Power figures are estimates for reference. Pricing and lead time are provided in a formal quotation.",
   },
   families: [
     { id: "gpu", name: "GPU / AI Servers", desc: "Training and inference servers based on NVIDIA HGX 8-GPU and PCIe GPUs" },

@@ -57,11 +57,11 @@
     const uses = C.use_cases.map(u => `<a class="card" href="#/products?use=${u.id}"><h3>${esc(u.name)}</h3><p>${esc(u.desc)}</p></a>`).join("");
     shell("개요", `
       <section class="hero"><div class="wrap">
-        <p class="intro">모델을 고르고 CPU, 메모리, GPU, 스토리지를 직접 바꿔 보면 구성 가능 여부와 예상 전력, 납기를 바로 확인할 수 있습니다. 고밀도 GPU 서버는 액체냉각(DLC) 설계까지 함께 제안합니다.</p>
+        <p class="intro">모델을 고르고 CPU, 메모리, GPU, 스토리지를 직접 바꿔 보면 구성 가능 여부와 예상 전력을 바로 확인할 수 있습니다. 고밀도 GPU 서버는 액체냉각(DLC) 설계까지 함께 제안합니다.</p>
         <a class="btn sky" href="#/products">내 서버 만들기</a> <a class="btn ghost" href="#/downloads">카탈로그 다운로드</a>
         <div class="stats">
           <div><b>${ALL.length.toLocaleString()}종</b><small>Supermicro 전체 라인업</small></div>
-          <div><b>실시간</b><small>구성 검증, 납기 확인</small></div>
+          <div><b>실시간</b><small>구성 검증, 전력 확인</small></div>
           <div><b>전력, 발열</b><small>랙 단위 kW 자동 산출</small></div>
           <div><b>EPC 연계</b><small>DLC, CDU, 배관 설계</small></div>
         </div>
@@ -124,7 +124,7 @@
           <h4>기타</h4>${cb("gpu", "y", "GPU 탑재 모델")}${cb("dlc", "y", "DLC(수냉) 지원")}
           <p style="margin:14px 0 0"><a class="btn ghost sm" href="#/products">필터 초기화</a></p>
         </aside>
-        <div><p class="sub" style="margin:0 0 12px">${list.length}개 모델 / 가격은 견적으로 안내</p>
+        <div><p class="sub" style="margin:0 0 12px">${list.length}개 모델 / 가격, 납기는 견적으로 안내</p>
           <div class="grid g3">${cards}</div></div>
       </div></div>`);
     $("#flt").addEventListener("change", () => {
@@ -156,7 +156,7 @@
           <p style="color:var(--ink-2)">${esc(m.summary)}</p>
           <div class="card" style="margin:18px 0">
             <div class="row2" style="display:flex;justify-content:space-between"><span>가격</span><b class="price">${smcPrice(m.id)}</b></div>
-            <div class="row2" style="display:flex;justify-content:space-between;margin-top:6px"><span>예상 납기</span><b>${startLead(m)}</b></div>
+            <div class="row2" style="display:flex;justify-content:space-between;margin-top:6px"><span>납기</span><b>${startLead(m)}</b></div>
             <p style="font-size:12px;margin-top:10px">${smcNote(m.id)}</p>
             <p style="margin-top:14px"><a class="btn" href="#/configure/${m.id}">이 모델로 구성하기</a></p>
           </div>
@@ -292,7 +292,7 @@
     const p = priceTxt !== undefined ? priceTxt : "";
     return `<label class="opt ${sel ? "sel" : ""} ${disabled ? "dis" : ""}">
       <input type="${type}" name="${name}" value="${id}" ${sel ? "checked" : ""} ${disabled ? "disabled" : ""}>
-      <div><div class="t">${esc(it.name || id)}</div><div class="d">${esc(it.desc || "")}${it.lead > 2 ? ` · 부품 납기 ${it.lead}주` : ""}</div>${extra}</div>
+      <div><div class="t">${esc(it.name || id)}</div><div class="d">${esc(it.desc || "")}</div>${extra}</div>
       <div class="p">${p}${it.price && type !== "checkbox" && name !== "cpu" ? "" : ""}</div></label>`;
   }
   const qtyBox = (k, v) => `<span class="qty"><button data-q="${k}" data-d="-1">−</button><span>${v}</span><button data-q="${k}" data-d="1">+</button></span>`;
@@ -377,7 +377,7 @@
       <div class="bd">${t.L.map(l => `<div class="line"><span>${esc(l.label)}${l.qty > 1 ? " x" + l.qty : ""}</span><span>${onReq ? "" : l.it.price ? man(l.it.price * l.qty) : "포함"}</span></div>`).join("")}</div>
       <div class="ft">
         <div class="row2"><span>수량</span><b>${S.units}대</b></div>
-        <div class="row2"><span>예상 납기</span><b>${t.lead[0]}~${t.lead[1]}주</b></div>
+        <div class="row2"><span>납기</span><b>견적 문의</b></div>
         <div class="row2"><span>예상 전력</span><b>${won(t.w)}W/대</b></div>
         <div style="margin-top:8px;font-size:13px;color:var(--ink-3)">가격</div>
         <div class="big">${smcPrice(m.id, 1)}</div>${smcKrw(m.id)}${smcPriceSubCfg(m.id)}
@@ -463,7 +463,7 @@
     const keep = S; S = defaults(m); const t = totals().unit; S = keep; return t;
   }
   function startLead(m) {
-    const keep = S; S = defaults(m); const l = totals().lead; S = keep; return `${l[0]}~${l[1]}주`;
+    return "견적 문의";
   }
 
   // ---------- 견적 요청 ----------
@@ -479,11 +479,11 @@
   function quoteModal() {
     const m = M(), t = totals();
     openModal(`<h2 style="margin-top:0">견적 요청</h2>
-      <p class="sub">${esc(m.sku)} x ${S.units}대 / ${smcQuoteLine(m.id)} / 납기 ${t.lead[0]}~${t.lead[1]}주<br>구성 내역과 링크가 담당자에게 함께 전달됩니다. 영업일 기준 1일 내 회신.</p>
+      <p class="sub">${esc(m.sku)} x ${S.units}대 / ${smcQuoteLine(m.id)}<br>구성 내역과 링크가 담당자에게 함께 전달됩니다. 영업일 기준 1일 내 회신.</p>
       ${leadForm(true)}`, null, () => {
       const f = Object.fromEntries(new FormData($("#lf")));
       const body = [`[웹 구성기 견적 요청]`, `회사: ${f.co} / 담당: ${f.nm} / ${f.em} / ${f.tel || ""}`, `납품 희망: ${f.due || "-"} / 설치: ${f.site}`, `모델: ${m.sku} x ${S.units}대`,
-        ...t.L.map(l => `- ${l.label}${l.qty > 1 ? " x" + l.qty : ""}`), `납기 ${t.lead[0]}~${t.lead[1]}주 / ${t.w}W/대`, `요청: ${f.memo || "-"}`, `구성 링크: ${location.href}`].join("\n");
+        ...t.L.map(l => `- ${l.label}${l.qty > 1 ? " x" + l.qty : ""}`), `${t.w}W/대`, `요청: ${f.memo || "-"}`, `구성 링크: ${location.href}`].join("\n");
       location.href = `mailto:${C.meta.quote_email}?subject=${encodeURIComponent("[서버 견적요청] " + f.co + " / " + m.sku)}&body=${encodeURIComponent(body)}`;
     });
   }
@@ -630,7 +630,7 @@
           <p style="color:var(--ink-2)">${esc(m.sum || "")}</p>
           <div class="card" style="margin:18px 0">
             <div class="row2" style="display:flex;justify-content:space-between"><span>가격</span><b class="price">${smcPrice(m.id)}</b></div>${smcPriceSub(m.id)}
-            <div class="row2" style="display:flex;justify-content:space-between;margin-top:6px"><span>납기</span><b>구성 확정 후 안내</b></div>
+            <div class="row2" style="display:flex;justify-content:space-between;margin-top:6px"><span>납기</span><b>견적 문의</b></div>
             <p style="font-size:12px;margin-top:10px">CPU, 메모리, 드라이브 등 필요한 사양을 고르면 담당자가 견적서로 회신드립니다.</p>
             <p style="margin-top:14px"><a class="btn" href="#/configure/${m.id}">${m.part ? "이 제품 견적 요청" : "이 모델로 구성하기"}</a></p>
           </div>
@@ -1087,7 +1087,7 @@ if (typeof module !== "undefined" && module.exports) module.exports = createSmcR
         ${L.slice(1).map(l => `<div class="line"><span>${esc(l.p.d)}${l.qty > 1 ? " x" + l.qty : ""}</span><span></span></div>`).join("")}</div>
       <div class="ft">
         <div class="row2"><span>수량</span><b>${K.units}대</b></div>
-        <div class="row2"><span>납기</span><b>견적 시 안내</b></div>
+        <div class="row2"><span>납기</span><b>견적 문의</b></div>
         <div class="row2"><span>예상 전력</span><b>${won(kWatts())}W/${K.d.nodes > 1 ? "노드" : "대"}</b></div>
         <div style="margin-top:8px;font-size:13px;color:var(--ink-3)">가격</div>
         <div class="big">${smcPrice(K.id, 1)}</div>${smcKrw(K.id)}${smcPriceSubCfg(K.id)}

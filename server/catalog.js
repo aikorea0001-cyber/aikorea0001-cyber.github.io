@@ -10,7 +10,7 @@ window.CATALOG = {
     lead_buffer_weeks: 2,      // 납기 범위 상단 여유
     psu_headroom: 1.2,         // PSU 여유율
     air_limit_kw_per_rack: 20, // 공랭 랙 한계 가정
-    disclaimer: "납기와 전력은 참고용 예상치입니다. 확정 가격과 납기는 견적서로 안내드립니다.",
+    disclaimer: "전력은 참고용 예상치입니다. 가격과 납기는 견적서로 안내드립니다.",
   },
 
   families: [
