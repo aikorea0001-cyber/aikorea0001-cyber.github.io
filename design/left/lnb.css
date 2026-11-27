@@ -1,0 +1,15 @@
+/* second-menu */
+.lmenu p.secon_m{border-left:0px solid #DEDEDE;border-top:1px solid #DEDEDE;border-right:1px solid #DEDEDE;}
+.lmenu p.secon_m span{background-color:#F6F6F6;color:#666666}
+.lmenu p.hover{padding:0;border:1px solid #9A9A9A;}
+.lmenu p.hover span{font-weight:bold;background-color:#FFFFFF;color:#333333}
+/* third-menu */
+.third_m {background-color:#FFFFFF;color:#666666}
+.third_m dd{padding:0 0 0 17px;border:2px solid #DEDEDE;font-size:11px}
+dd.hover{background:#826F58;color:#FFFFFF;padding:0 0 0 17px;border:2px solid #826F58}
+#css_lnb_frame{border-left:1px solid #DEDEDE;border-bottom:1px solid #9A9A9A}
+.lmenu.s p.hover{border:1px solid #DEDEDE}
+.lmenu.s p{border-left:1px solid #DEDEDE}
+.third_m.s{border-top:1px solid #DEDEDE ;border-left:1px solid #DEDEDE;border-right:1px solid #DEDEDE}
+.third_tabs li.tab_choice a{background-color:#083291;color:#FFFFFF;border:1px solid #083291 } /* [수정안] 브라운 -> 남색 */
+.third_tabs li a{background-color:#FFFFFF;color:#666666;border:1px solid #DEDEDE}

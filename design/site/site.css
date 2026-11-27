@@ -1,0 +1,63 @@
+@import url('../skin/responsive.css');
+
+.color {color:#121212} /*테마색*/
+.tcolor {color:#333333} /*테마글자색*/
+.bcolor {color:#333333} /*게시판 배경색*/
+.btcolor {color:#FFFFFF} /*게시판 글자색*/
+
+.color_b {background-color:#121212} /*테마색*/
+.tcolor_b {background-color:#333333} /*테마글자색*/
+.bcolor_b {background-color:#333333} /*게시판 배경색*/
+.btcolor_b {background-color:#FFFFFF} /*게시판 글자색*/
+
+/*background 대표테마색*/
+.img_bgc{background-color:#121212}
+
+/*탭 bgcolor 대표테마색*/
+.prd_tabs li{background-color:#333333;color:#FFFFFF}
+.prd_tabs li a{color:#FFFFFF}
+.agency_tab li.tab_choice{background-color:#333333}
+tab_choice{background-color:#333333!important}
+
+/*좌측메뉴 타이틀+라인 대표테마색*/
+.l_tit,.l_tit2{color:#121212}
+.text_menu{border-bottom:2px solid #121212}
+
+/*서브우측컨텐츠 타이틀+블릿+라인 대표테마색*/
+.tit_bullet{background-color:#121212;border: 1px solid #121212;_background:#121212}
+
+/*서브 컨텐츠 타이틀+블릿색상 대표테마색*/
+.bullet_img{background-color:#121212}
+
+/*메인 배경색 및 타이틀*/
+.col_basic{background-color:#121212}
+.tab_wrap li{color:#121212}
+.con_tit{color:#121212}
+
+/* 웹진테두리 */
+.bd_bgc{background-color:#333333}
+
+/*배경색+타이틀명 라인색*/
+.cla_bg{background-color:#333333;color:#FFFFFF}
+.bd_tit,.t_bgcolor,.t_bgcolor th,.t_bgcolor tr td{background-color:#333333;color:#FFFFFF}
+.Form_top,.Form_top2{border-top:2px solid #333333}
+.Form_box{border:2px solid #333333}
+
+/*form 게시판색*/
+.subtitle {color:#333333}
+
+/*쇼핑몰추가*/
+.bcolor_b2{border:1px solid #333333;color:#333333}
+.shop_bt2{border:1px solid #333333;}
+.brd_b{border-top:2px solid #333333;}
+
+/*상단영역 */
+#header{border-top:35px solid #121212;}
+
+/* 메인비쥬얼 하단 컨테이너 색상 */
+main_container {
+	filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, StartColorStr=#121212, EndColorStr=#3a3a3a);
+	background: -ms-linear-gradient(top, #121212, #3a3a3a);
+	background: -moz-linear-gradient(top, #121212, #3a3a3a);
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#121212), to(#3a3a3a));
+}

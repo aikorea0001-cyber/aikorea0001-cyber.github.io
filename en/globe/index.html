@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI KOREA Sites in Korea and Abroad</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Exo+2:wght@400;600;700&display=swap">
+<style>
+  /* 회사개요 페이지 안에 iframe으로 들어가는 사업장 지구본. 색, 글꼴은 기존 사이트 기준 */
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: #fff; overflow: hidden; }
+  body { font-family: 'Exo 2', 'Noto Sans KR', sans-serif; color: #333; }
+  .wrap { display: grid; grid-template-columns: 1fr 360px; height: 100%; }
+  .stage { position: relative; min-width: 0; }
+  #globe { position: absolute; inset: 0; width: 100%; height: 100%; display: block; cursor: grab; touch-action: pan-y; }
+  #globe:active { cursor: grabbing; }
+  .tag {
+    position: absolute; left: 0; top: 0; pointer-events: auto; cursor: pointer; white-space: nowrap; text-align: center;
+    font-size: 15px; font-weight: 700; line-height: 1.25; color: #111; padding: 6px 12px; border-radius: 30px;
+    background: rgba(255, 255, 255, .92); border: 1px solid #c9d6ea; transition: opacity .2s, background-color .2s, color .2s, border-color .2s;
+    will-change: transform;
+  }
+  .tag small { display: block; font-size: 12px; font-weight: 500; color: #666; }
+  .tag.on { background: #083291; border-color: #083291; color: #fff; }
+  .tag.on small { color: #cfdcf5; }
+  .hint { position: absolute; left: 0; bottom: 14px; font-size: 13px; color: #888; }
+
+  .side { align-self: center; padding: 0 0 0 20px; }
+  .side h2 { font-size: 34px; font-weight: 700; color: #222; letter-spacing: -.02em; margin: 0 0 6px; }
+  .side p.sub { font-size: 16px; color: #666; margin: 0 0 22px; }
+  .sites { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+  .sites button {
+    display: block; width: 100%; text-align: left; font: inherit; cursor: pointer; padding: 16px 18px;
+    background: #fafafa; border: 1px solid #ddd; border-left: 4px solid #c9d6ea; border-radius: 8px; color: #333;
+    transition: border-color .15s, background-color .15s;
+  }
+  .sites button:hover { border-color: #1a66c2; background: #fff; }
+  .sites li.on button { border-color: #083291; background: #f4f7fc; }
+  .sites b { display: block; font-size: 19px; color: #222; }
+  .sites span { font-size: 14px; color: #666; }
+  .more { display: inline-block; margin-top: 18px; padding: 10px 26px; border-radius: 30px; background: #083291; color: #fff; font-size: 15px; font-weight: 600; text-decoration: none; }
+  .more:hover { background: #062470; }
+
+  /* WebGL을 쓸 수 없는 환경: 기존 지도 그림으로 대체 */
+  .fallback { display: none; }
+  .no-gl .wrap { display: none; }
+  .no-gl .fallback { display: block; }
+  .no-gl .fallback img { width: 100%; height: auto; display: block; }
+  @media (max-width: 820px) {
+    .wrap { grid-template-columns: 1fr; grid-template-rows: 1fr auto; }
+    .side { padding: 0 12px 12px; }
+    .side h2, .side p.sub { display: none; }
+    .sites { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+<link rel="alternate" hreflang="ko" href="../../globe/index.html"><link rel="alternate" hreflang="en" href="index.html"><script>(function(){try{var q=/[?&]lang=(ko|en)\b/.exec(location.search);if(!q)return;localStorage.setItem('aik_lang',q[1]);if(q[1]==='ko')location.replace('../../globe/index.html'+location.hash);}catch(e){}})();</script><style>@media (max-width: 1420px) { #header .language_btn { left: auto; right: 108px; top: 5px; margin-left: 0; } #header .language_btn .kor_btn img { width: 18px; } #header .language_btn .kor_btn span { font-size: 12px; } #header .global_btn { left: auto; right: 100px; top: 30px; margin-left: 0; } }</style>
+<style id="aik-en">
+html[lang="en"] #header .gnb > li > a { text-transform: uppercase; letter-spacing: 0; padding: 0 21px; font-size: 17px; }
+@media (min-width: 1911px) { html[lang="en"] #aikSocial { margin-left: 694px; gap: 4px; } }
+html[lang="en"] #aikSocial a { font-size: 12px; letter-spacing: 0; }
+@media (min-width: 1911px) { html[lang="en"] #aikSocial a { padding: 0 8px 0 3px; gap: 4px; } }
+html[lang="en"] #body_wrap * { letter-spacing: -0.01em; }
+html[lang="en"] #body_wrap .aik-lt { font: 800 38px/1.2 "Noto Sans KR", sans-serif; letter-spacing: -0.02em; color: #111; }
+html[lang="en"] #body_wrap .eb, html[lang="en"] #aikCta .sh b, html[lang="en"] #aikCta .ptit b { letter-spacing: .1em; }
+html[lang="en"] #header .gnb li ul li a, .lmenu p.secon_m span, .third_tabs li a { letter-spacing: 0 !important; }
+.l_menu_box .lmenu p.secon_m span { white-space: nowrap; }
+html[lang="en"] #header .gnb > li > ul { width: 250px; margin-left: -125px; }
+html[lang="en"] #body_wrap .tri.one { display: block; }
+html[lang="en"] #body_wrap .tri.one input { width: 100%; box-sizing: border-box; }
+html[lang="en"] #body_wrap .aik-en-search { height: 22px; padding: 0 12px; border: 1px solid #999; background: #555; color: #fff; font-size: 12px; cursor: pointer; vertical-align: top; }
+.aik-en-note { margin: 0 0 18px; padding: 12px 16px; border-left: 3px solid #083291; background: #f4f6fb; color: #444; font: 14px/1.6 "Noto Sans KR", sans-serif; text-align: left; }
+.aiken { font-family: "Noto Sans KR", sans-serif; color: #222; padding: 10px 0 60px; text-align: left; line-height: 1.65; clear: both; }
+.aiken * { box-sizing: border-box; }
+.aiken .eb { margin: 0; font-family: "Exo 2", "Noto Sans KR", sans-serif; font-size: 15px; font-weight: 700; letter-spacing: .1em; color: #CC2D29; }
+.aiken h2 { margin: 6px 0 12px; font-size: 38px; line-height: 1.25; font-weight: 800; color: #111; }
+.aiken h3 { margin: 52px 0 10px; font-size: 24px; font-weight: 800; color: #111; }
+.aiken .lead { margin: 0 0 34px; font-size: 18px; color: #444; }
+.aiken p { margin: 0 0 12px; font-size: 16px; color: #444; }
+.aiken .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; margin: 10px 0 34px; }
+.aiken .duo h3 { margin-top: 0; }
+.aiken .duo img { width: 100%; height: auto; border-radius: 12px; display: block; }
+.aiken .tags { list-style: none; margin: 18px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.aiken .tags li { padding: 7px 14px; border: 1px solid #c9d3ea; border-radius: 30px; font-size: 13px; font-weight: 700; color: #083291; background: #f4f6fb; }
+.aiken .steps { list-style: none; margin: 0 0 34px; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; counter-reset: s; }
+.aiken .steps.four { grid-template-columns: repeat(4, 1fr); }
+.aiken .steps li { padding: 20px 20px 22px; border-radius: 12px; background: #0b1f52; color: #fff; }
+.aiken .steps li b { display: block; font-family: "Exo 2", sans-serif; font-size: 18px; letter-spacing: .06em; margin-bottom: 6px; }
+.aiken .steps li span { font-size: 14px; color: #cfd8ee; line-height: 1.5; display: block; }
+.aiken .kv { width: 100%; border-collapse: collapse; border-top: 2px solid #111; margin: 0 0 10px; }
+.aiken .kv th, .aiken .kv td { padding: 13px 14px; border-bottom: 1px solid #e3e6ee; font-size: 15px; text-align: left; vertical-align: top; }
+.aiken .kv th { width: 220px; font-weight: 700; color: #111; background: #f7f8fb; }
+.aiken .cards { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.aiken .cards li { padding: 20px; border: 1px solid #e3e6ee; border-radius: 12px; background: #fff; }
+.aiken .cards li b { display: block; font-size: 16px; color: #083291; margin-bottom: 6px; }
+.aiken .cards li span { font-size: 14px; color: #555; line-height: 1.55; display: block; }
+.aiken .hl { padding: 30px; border-radius: 12px; background: #083291; }
+.aiken .hl h3, .aiken .hl p { color: #fff; }
+.aiken-video { width: 100%; height: 620px; border: 0; display: block; margin: 0 0 30px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="stage">
+    <canvas id="globe" aria-label="Globe showing the head office and the subsidiaries in Poland, Hungary and the United States"></canvas>
+    <div id="tags"></div>
+    <p class="hint">Drag to rotate the globe.</p>
+  </div>
+  <div class="side">
+    <h2>Global Network</h2>
+    <p class="sub">Head office and overseas subsidiaries</p>
+    <ul class="sites" id="sites"></ul>
+    <a class="more" id="more" href="../main/page__pid-103.html" target="_top">View facilities</a>
+  </div>
+</div>
+<div class="fallback">
+  <img src="../../globe/map_fallback.gif" alt="Map of the head office (Korea) and the subsidiaries in Poland, Hungary and the United States" usemap="#sitesmap">
+  <map name="sitesmap">
+    <area target="_top" alt="Poland subsidiary" href="../main/page__pid-103.html#Facilities02" coords="106,250,30" shape="circle">
+    <area target="_top" alt="Hungary subsidiary" href="../main/page__pid-103.html#Facilities03" coords="132,300,31" shape="circle">
+    <area target="_top" alt="Head Office" href="../main/page__pid-103.html#Facilities01" coords="476,319,29" shape="circle">
+    <area target="_top" alt="U.S. subsidiary" href="../main/page__pid-103.html#Facilities04" coords="1039,312,31" shape="circle">
+  </map>
+</div>
+<script type="module" src="globe.js?v=1794805573"></script>
+</body>
+</html>

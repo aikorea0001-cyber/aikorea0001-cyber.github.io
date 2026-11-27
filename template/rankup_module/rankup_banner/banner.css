@@ -1,0 +1,38 @@
+.banner-wrap {
+	position: relative; 
+	top: 0px; 
+	left: 0px; 
+}
+
+.banner-wrap  div.slides{
+	cursor: pointer; 
+	position: absolute; 
+	left: 0px; 
+	top: 0px; 
+	overflow: hidden;
+}
+
+.banner-bullet div, .banner-bullet div:hover, .banner-bullet .av {
+	overflow:hidden;
+	cursor: pointer;
+}
+
+.style-number {font-size:11px;}
+.style-number div { background-color: gray; border: #414141 1px solid;}
+.style-number div:hover, .style-number .av:hover { background-color: #d3d3d3; }
+.style-number .av { background-color: #fff; }
+.style-number .dn, .style-number .dn:hover { background-color: #555555; color:#FFFFFF;}
+
+.banner-bullet.position_tl {top: 10px;left:10px;}
+.banner-bullet.position_tc {top: 10px;margin:0 auto;}
+.banner-bullet.position_tr {top: 10px;right:10px;}
+.banner-bullet.position_bl {bottom: 10px;left:10px;}
+.banner-bullet.position_bc {bottom: 10px;margin:0 auto;}
+.banner-bullet.position_br {bottom: 10px;right:10px;}
+
+.banner-arrow-left, .banner-arrow-right, .banner-arrow-leftdn, .banner-arrow-rightdn {
+	position: absolute;
+	cursor: pointer;
+	display: block;
+    overflow: hidden;
+}

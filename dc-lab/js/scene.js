@@ -1,0 +1,270 @@
+// 계산 결과로 3D 배치를 자동 생성하고 돌려 보는 화면.
+// 실제 랙 수가 많아도 대표 구역(최대 48랙)만 그린다. 모델은 교육용 개념 표현이다(제조사 CAD 아님).
+import * as THREE from 'three';
+import { World } from './world.js';
+import { buildSite } from './site.js';
+
+const MAX_RACKS = 48, PER_ROW = 12;
+
+/** 선택값과 계산 결과 → World 가 읽는 배치 데이터 */
+export function makeLevel(input, r) {
+  const shown = Math.min(r.racks, MAX_RACKS);
+  const perRow = Math.min(PER_ROW, shown);
+  const rows = Math.ceil(shown / perRow), pairs = Math.ceil(rows / 2);
+  const hallD = pairs * 6 + 4, d = Math.max(18, hallD + 2), w = 30;
+  const xs = -11.5, z0 = -((pairs - 1) * 6 + 3) / 2;
+  const variant = r.server.variant;
+  const fill = [], items = [], air = [], liquid = [], power = [], heat = [];
+  const rowInfo = [];
+  const hac = input.contain === 'hac';        // 더운 통로 밀폐: 랙 뒷면끼리 마주 본다 (기본은 찬 통로 밀폐: 앞면끼리)
+  let left = shown;
+  for (let i = 0; i < rows; i++) {
+    const p = Math.floor(i / 2), second = i % 2 === 1;
+    const back = hac ? !second : second;       // back = 앞면이 -z 를 본다(rot 180)
+    const z = z0 + p * 6 + (second ? 3 : 0), n = Math.min(perRow, left); left -= n;
+    fill.push({ variant, x: xs, z, count: n, rot: back ? 180 : 0, dx: 1 });
+    rowInfo.push({ z, n, back, p });
+    heat.push({ pos: [xs + (n - 1) / 2, z + (back ? 1.0 : -1.0)], size: [n, 1.1], t: r.liquid ? (hac ? 0.58 : 0.46) : (hac ? 0.98 : 0.88) });   // 랙 뒤쪽: 가둔 더운 통로는 더 뜨겁다
+  }
+  const xEnd = xs + perRow - 0.5;
+  const aisles = []; for (let p = 0; p < pairs; p++) aisles.push(z0 + p * 6 + 1.5);
+
+  // 열 배출 설비 (오른쪽 기계 구역)
+  const rejects = [];
+  for (let i = 0; i < Math.min(2, r.dry); i++) rejects.push('drycooler');
+  for (let i = 0; i < Math.min(rejects.length ? 1 : 2, r.chillers); i++) rejects.push('chiller');
+  rejects.slice(0, 3).forEach((type, i) => items.push({ id: 'rej' + i, type, pos: [9.6, -d / 2 + 2.6 + i * 3.6], rot: 0 }));
+  const zr = -d / 2 + 2.6;
+  items.push({ id: 'pump', type: 'pump', pos: [5.6, zr + 0.2], rot: 90 });
+  // 전력 설비
+  if (r.gens > 0) items.push({ id: 'gen', type: 'generator', pos: [9.6, d / 2 - 3.6], rot: 0 });
+  items.push({ id: 'swg', type: 'switchgear', pos: [9.6, d / 2 - 0.7], rot: 180 });
+  const upsN = Math.min(3, r.ups);
+  for (let i = 0; i < upsN; i++) items.push({ id: 'ups' + i, type: 'ups', pos: [14.3, d / 2 - 2 - i * 1.3], rot: -90 });
+  const zu = d / 2 - 2;
+
+  // ---- 랙 줄 위치 정보: 앞면(찬 통로 쪽), 뒷면(더운 쪽)
+  const trenches = [], risers = [], trays = [], ducts = [], zones2 = [];
+  for (const ri of rowInfo) { ri.sgn = ri.back ? 1 : -1; ri.zFront = ri.z - ri.sgn * 0.55; ri.zRear = ri.z + ri.sgn * 0.55; ri.za = aisles[ri.p]; ri.coldZ = ri.zFront - ri.sgn * 0.95; }
+  const coldLanes = [...new Set(rowInfo.map((ri) => ri.coldZ.toFixed(2)))].map(Number);      // 찬 공기가 지나는 통로들
+  const nearAisle = (z) => aisles.slice(0, 3).reduce((a, b) => (Math.abs(b - z) < Math.abs(a - z) ? b : a));
+  for (const cz of coldLanes) heat.push({ pos: [xs + (perRow - 1) / 2, cz], size: [perRow, 1.8], t: hac ? 0.12 : 0.07 });
+
+  // ---- 공기 쪽 냉각 장비
+  const units = [];                                  // 공조기 위치 (냉수 배관 연결용)
+  if (input.cooling === 'inrow') {
+    rowInfo.forEach((ri, i) => { ri.ux = xs + ri.n - 0.5 + 0.3; items.push({ id: 'inrow' + i, type: 'inrow', pos: [ri.ux, ri.z], rot: ri.back ? 180 : 0 }); units.push([ri.ux, ri.z, ri.sgn]); });
+  } else {
+    const type = r.airType.startsWith('FWU') ? 'fwu' : 'crah';
+    aisles.slice(0, 3).forEach((za, i) => { items.push({ id: 'air' + i, type, pos: [-14.4, za], rot: 90 }); units.push([-14.0, za, 0]); });
+  }
+  // ---- 공기 흐름: 찬 통로 → 랙 앞면으로 흡입 → 랙 통과 → 뒷면 더운 공기 → 냉방기로 복귀
+  const every = r.liquid ? 4 : 3;
+  if (input.cooling === 'inrow') {
+    for (const ri of rowInfo) {
+      // In-row 는 바로 옆에서 찬 공기를 내보내고, 랙 뒤의 더운 공기를 뒤쪽에서 다시 빨아들인다
+      air.push({ color: 'cold', pts: [[ri.ux, 1.0, ri.zFront - ri.sgn * 0.15], [ri.ux - 0.6, 0.9, (ri.zFront + ri.coldZ) / 2], [xs + ri.n * 0.5, 0.9, (ri.zFront + ri.coldZ) / 2], [xs, 0.9, (ri.zFront + ri.coldZ) / 2]] });
+      for (let k = 1; k < ri.n; k += every) { const x = xs + k; air.push({ color: 'cold', pts: [[x, 0.9, (ri.zFront + ri.coldZ) / 2], [x, 1.05, ri.zFront - ri.sgn * 0.1], [x, 1.1, ri.zFront + ri.sgn * 0.25]] }); air.push({ color: 'hot', pts: [[x, 1.2, ri.zRear - ri.sgn * 0.2], [x, 1.3, ri.zRear + ri.sgn * 0.3], [x + 0.6, 1.35, ri.zRear + ri.sgn * 0.45]] }); }
+      air.push({ color: 'hot', pts: [[xs, 1.35, ri.zRear + ri.sgn * 0.45], [xs + ri.n * 0.5, 1.35, ri.zRear + ri.sgn * 0.45], [ri.ux - 0.3, 1.35, ri.zRear + ri.sgn * 0.45], [ri.ux, 1.3, ri.zRear + ri.sgn * 0.1]] });
+    }
+  } else {
+    for (const cz of coldLanes) air.push({ color: 'cold', pts: [[-13.5, 1.0, nearAisle(cz)], [-12.4, 0.7, cz], [xs, 0.6, cz], [xEnd, 0.6, cz]] });   // 공조기 → 찬 통로를 따라 공급
+    for (const ri of rowInfo) {
+      const zu = aisles[Math.min(ri.p, 2)], zt = ri.zRear + ri.sgn * 0.55;
+      for (let k = 1; k < ri.n; k += every) { const x = xs + k; air.push({ color: 'cold', pts: [[x, 0.6, ri.coldZ], [x, 0.95, (ri.zFront + ri.coldZ) / 2], [x, 1.1, ri.zFront + ri.sgn * 0.25]] }); air.push({ color: 'hot', pts: [[x, 1.2, ri.zRear - ri.sgn * 0.2], [x, 1.5, ri.zRear + ri.sgn * 0.3], [x - 0.2, 2.45, zt], [x - 0.9, 2.62, zt]] }); }
+      // 랙 위로 모인 더운 공기가 공조기 상부로 돌아간다
+      air.push({ color: 'hot', pts: [[xEnd, 2.62, zt], [xs, 2.62, zt], [-12.6, 2.62, zt], [-13.4, 2.5, (zt + zu) / 2], [-14.0, 2.3, zu]] });
+      ducts.push({ pts: [[xEnd, 3.08, zt], [-12.7, 3.08, zt], [-13.9, 2.45, zu]] });          // 더운 공기를 공조기로 되돌리는 환기 덕트
+    }
+  }
+
+  // ---- 냉각수 배관 (직각 경로)
+  const zFar = z0 + (pairs - 1) * 6 + 3 + 1.2;
+  if (r.liquid) {
+    // 2차 측(서버 쪽): In-Row CDU → 바닥 아래(이중마루 밑) 주배관 → 랙마다 수직관 → 랙 매니폴드
+    rowInfo.forEach((ri, i) => {
+      const cx = xs + ri.n - 0.5 + 0.55, zs = ri.z + ri.sgn * 0.56, zrt = ri.z + ri.sgn * 0.74, x0 = xs - 0.75;
+      items.push({ id: 'cdu' + i, type: 'cdu', pos: [cx, ri.z], rot: ri.back ? 180 : 0 }); ri.cx = cx;
+      trenches.push([x0, Math.min(ri.z + ri.sgn * 0.4, ri.z + ri.sgn * 0.92), cx + 0.45, Math.max(ri.z + ri.sgn * 0.4, ri.z + ri.sgn * 0.92)]);
+      liquid.push({ color: 'supply', r: 0.06, pts: [[cx - 0.2, 0.5, zs], [cx - 0.2, -0.42, zs], [x0 + 0.25, -0.42, zs]] });
+      liquid.push({ color: 'ret', r: 0.06, pts: [[x0 + 0.25, -0.42, zrt], [cx + 0.15, -0.42, zrt], [cx + 0.15, 0.5, zrt]] });
+      for (let k = 0; k < ri.n; k++) { const x = xs + k; risers.push({ x: x + ri.sgn * 0.35, z: zs }, { x: x - ri.sgn * 0.35, z: zrt, ret: true }); }
+      // 1차 측(시설 쪽): 머리 위 헤더에서 CDU 상부로 내려온다
+      const zb = ri.z + ri.sgn * 0.3;
+      liquid.push({ color: 'supply', r: 0.07, pts: [[5.0, 3.3, zb], [cx - 0.25, 3.3, zb], [cx - 0.25, 2.55, zb]] });
+      liquid.push({ color: 'ret', r: 0.07, pts: [[cx + 0.05, 2.55, zb], [cx + 0.05, 3.55, zb], [4.6, 3.55, zb]] });
+    });
+    liquid.push({ color: 'supply', r: 0.1, pts: [[7.4, 1.2, zr], [7.4, 3.3, zr], [5.0, 3.3, zr], [5.0, 3.3, zFar]] });
+    liquid.push({ color: 'ret', r: 0.1, pts: [[4.6, 3.55, zFar], [4.6, 3.55, zr + 0.8], [7.4, 3.55, zr + 0.8], [7.4, 1.2, zr + 0.8]] });
+  } else {
+    // 공랭: 머리 위 냉수 헤더에서 공조기마다 분기해 내려온다
+    const hz = -d / 2 + 0.8, far = Math.min(...units.map((u) => u[0]));
+    liquid.push({ color: 'supply', r: 0.09, pts: [[7.4, 1.2, zr], [7.4, 3.3, zr], [7.4, 3.3, hz], [far, 3.3, hz]] });
+    liquid.push({ color: 'ret', r: 0.09, pts: [[far, 3.55, hz + 0.5], [7.0, 3.55, hz + 0.5], [7.0, 3.55, zr + 0.8], [7.4, 1.2, zr + 0.8]] });
+    for (const [x, z] of units) {
+      liquid.push({ color: 'supply', r: 0.05, pts: [[x - 0.15, 3.3, hz], [x - 0.15, 3.3, z - 0.3], [x - 0.15, 2.5, z - 0.3]] });
+      liquid.push({ color: 'ret', r: 0.05, pts: [[x + 0.15, 2.5, z + 0.3], [x + 0.15, 3.55, z + 0.3], [x + 0.15, 3.55, hz + 0.5]] });
+    }
+  }
+  // ---- 전력: UPS → 주 트레이 → 랙 줄마다 분기. 전력 흐름은 케이블 트레이를 따라간다
+  const TX = 3.4, TY = 2.46, DX = 3.95, DY = 2.82;
+  const zMin = Math.min(...rowInfo.map((ri) => ri.z)) - 0.2;
+  for (const ri of rowInfo) {
+    power.push({ color: 'power', pts: [[13.6, 2.0, zu], [13.6, TY, zu], [TX, TY, zu], [TX, TY, ri.z], [xs, TY, ri.z]] });
+    trays.push({ kind: 'power', pts: [[TX, TY, ri.z], [xs - 0.45, TY, ri.z]] });                                   // 랙 줄 위 전력 트레이
+    trays.push({ kind: 'data', pts: [[DX, DY, ri.z + 0.3], [xs - 0.45, DY, ri.z + 0.3]] });                         // 랙 줄 위 광케이블 덕트
+  }
+  trays.push({ kind: 'power', w: 0.6, pts: [[TX, TY, zMin], [TX, TY, zu], [13.6, TY, zu], [13.6, 2.05, zu]] });     // 주 전력 트레이
+  trays.push({ kind: 'data', pts: [[DX, DY, zMin + 0.3], [DX, DY, d / 2 - 0.5]] });                                // 주 광케이블 덕트
+  power.push({ color: 'power', pts: [[9.6, 2.0, d / 2 - 0.9], [11.5, 3.6, d / 2 - 1.4], [13.8, 2.0, zu]] });
+
+  // ---- 찬 통로 / 더운 통로 바닥 표시 (통로 구성에 따라 위치가 바뀐다)
+  for (const cz of coldLanes) zones2.push({ rect: [xs - 0.6, cz - 0.95, xEnd + 0.6, cz + 0.95], color: 0x3b9bff, opacity: 0.3, name: { ko: hac ? '찬 통로 · COLD AISLE' : '찬 통로 (밀폐) · COLD AISLE' }, textColor: '#0a4aa0', labelW: 4.6 });
+  const hotSeen = new Set();
+  for (const ri of rowInfo) {
+    const key = hac ? ri.p : rowInfo.indexOf(ri); const first = !hotSeen.has(key); hotSeen.add(key);
+    zones2.push({ rect: [xs - 0.6, Math.min(ri.zRear, ri.zRear + ri.sgn * 1.0), xEnd + 0.6, Math.max(ri.zRear, ri.zRear + ri.sgn * 1.0)], color: 0xff5a3c, opacity: 0.26, name: first ? { ko: hac ? '더운 통로 (밀폐) · HOT AISLE' : '더운 통로 · HOT AISLE' } : null, textColor: '#a8200a', labelW: 4.6 });
+  }
+
+  // ---- 열화상용 열원·냉원: 설비마다 온도를 준다 (교육용 표현)
+  const HT = { crah: 0.06, fwu: 0.06, inrow: 0.08, cdu: 0.5, chiller: 0.62, drycooler: 0.66, ups: 0.56, switchgear: 0.5, generator: 0.42, pump: 0.46 };
+  for (const it of items) if (HT[it.type] !== undefined) heat.push({ pos: it.pos, size: it.type === 'inrow' || it.type === 'cdu' ? [0.9, 1.3] : [2.4, 2.0], t: HT[it.type] });
+
+  return {
+    id: 'plan', room: { w, d, h: 4.2 }, outColor: 0xd5dee9, spawn: [0, 0, 0],
+    zones: [
+      { rect: [-15, -d / 2, 4.3, d / 2], color: 0xcfd9e4, opacity: 0, name: { ko: r.racks > shown ? `서버홀 (전체 ${r.racks.toLocaleString()}랙 중 ${shown}랙만 표시)` : `서버홀 (${shown}랙)` } },
+      { rect: [4.3, -d / 2, 15, d / 2], color: 0x9aa89a, opacity: 0.55, name: { ko: '기계 · 전력 설비' } },
+      ...zones2,
+    ],
+    walls: [], fill, items, missions: [], heat, trenches, risers, trays, ducts,
+    contain: aisles.map((za) => ({ rect: [xs - 0.5, za - 0.95, xEnd, za + 0.95], hot: hac })),       // 밀폐한 통로의 지붕 (찬 통로는 파랑, 더운 통로는 빨강)
+    ambient: hac ? 0.16 : (r.liquid ? 0.34 : 0.5),                                                    // 열화상 바탕: 더운 통로를 가두면 방은 시원하고, 찬 통로를 가두면 방이 따뜻하다
+    flows: { air, liquid, power },
+  };
+}
+
+// 커서를 올렸을 때 보여 줄 장치 이름과 한 줄 설명
+const TIPS = {
+  inrow: 'In-Row 냉방기|랙 줄 사이에 끼워 넣어, 뒤쪽 더운 공기를 바로 식혀 앞쪽으로 내보냅니다',
+  crah: 'CRAH 공조기|차가운 물로 공기를 식혀 서버실에 불어 넣는 대형 공조기',
+  fwu: '팬월 유닛 (FWU)|벽면에 큰 팬을 줄지어 달아 찬 공기를 넓게 밀어 주는 공조기',
+  cdu: 'CDU (냉각수 분배 장치)|서버로 가는 냉각수를 나눠 보내고 온도와 압력을 맞춥니다',
+  pump: '냉수 펌프|차가운 물을 배관으로 밀어 순환시킵니다',
+  drycooler: '드라이쿨러|바깥 공기로 냉각수의 열을 버리는 실외 장비',
+  chiller: '칠러 (냉동기)|차가운 물을 만들어 내는 장비',
+  generator: '비상발전기|정전이 길어질 때 전기를 직접 만들어 공급합니다',
+  switchgear: '수배전반|들어온 전기를 받아 설비별로 나눠 보냅니다',
+  ups: 'UPS (무정전 전원 장치)|정전 순간에도 배터리로 전기를 끊김 없이 이어 줍니다',
+  rack: '서버 랙|서버를 층층이 꽂는 캐비닛',
+};
+export class Viewer {
+  constructor(el) {
+    this.el = el;
+    const r = (this.renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' }));
+    r.outputColorSpace = THREE.SRGBColorSpace; r.toneMapping = THREE.ACESFilmicToneMapping; r.toneMappingExposure = 1.05;
+    r.shadowMap.enabled = true; r.shadowMap.type = THREE.PCFSoftShadowMap; r.setPixelRatio(Math.min(devicePixelRatio, 2));
+    el.appendChild(r.domElement);
+    const scene = (this.scene = new THREE.Scene()); scene.background = new THREE.Color(0xe8eef5);
+    const env = new THREE.Scene(); env.background = new THREE.Color(0x9fb3c8);
+    const mk = (c, x, y, z, s) => { const m = new THREE.Mesh(new THREE.BoxGeometry(s, s, s), new THREE.MeshBasicMaterial({ color: c })); m.position.set(x, y, z); env.add(m); };
+    mk(0xffffff, 0, 30, 0, 26); mk(0xdfeaff, 30, 8, 10, 16); mk(0x7f96b6, -30, 4, -10, 18); mk(0x56667e, 0, -30, 0, 30);
+    scene.environment = new THREE.PMREMGenerator(r).fromScene(env, 0.04).texture; scene.environmentIntensity = 0.75;
+    scene.add(new THREE.HemisphereLight(0xffffff, 0x8795a8, 0.95));
+    const sun = (this.sun = new THREE.DirectionalLight(0xffffff, 2.0)); sun.position.set(10, 22, 12); sun.castShadow = true;
+    sun.shadow.mapSize.set(2048, 2048); sun.shadow.camera.near = 1; sun.shadow.camera.far = 70; sun.shadow.bias = -0.0005; sun.shadow.normalBias = 0.03;
+    const c = sun.shadow.camera; c.left = -24; c.right = 24; c.top = 24; c.bottom = -24; c.updateProjectionMatrix();
+    scene.add(sun, sun.target);
+    this.camera = new THREE.PerspectiveCamera(40, 1, 0.5, 6000);
+    this.view = 'site'; this.site = null; this.minDist = 12; this.maxDist = 90; this.lookY = 1.2;
+    this.world = new World(scene);
+    this.ang = 0.7; this.elv = 0.72; this.dist = 44; this.auto = true; this.mode = 'normal'; this.center = new THREE.Vector3();
+    // 커서를 올리면 어떤 장치인지 알려 주는 말풍선
+    const tip = (this.tipEl = document.createElement('div')); tip.className = 'tip3d hidden'; el.appendChild(tip);
+    const ray = new THREE.Raycaster(); const ndc = new THREE.Vector2(); let hoverXY = null, hoverDirty = false;
+    const SKIP = new Set(['flow', 'cover', 'outline', 'inner']);
+    const seen = (o) => { for (let p = o; p; p = p.parent) if (!p.visible) return false; return true; };
+    this.pick = () => {
+      hoverDirty = false; let found = null, item = null;
+      if (hoverXY && this.view === 'hall' && this.world.root) {
+        const b = dom.getBoundingClientRect(); ndc.set(((hoverXY[0] - b.left) / b.width) * 2 - 1, -((hoverXY[1] - b.top) / b.height) * 2 + 1);
+        ray.setFromCamera(ndc, this.camera);
+        for (const h of ray.intersectObject(this.world.root, true)) {
+          const o = h.object; if (SKIP.has(o.userData.sys) || !seen(o) || o.isLine) continue;
+          if (o.userData.itemId) { item = this.world.item(o.userData.itemId); found = item && TIPS[item.type]; }
+          else for (let p = o; p && !found; p = p.parent) found = p.userData.tip;
+          break;                                     // 맨 앞에 보이는 것만 본다
+        }
+        if (found) { const [name, desc] = found.split('|'); tip.innerHTML = '<b></b><span></span>'; tip.firstChild.textContent = name; tip.lastChild.textContent = desc || '';
+          const x = hoverXY[0] - b.left, y = hoverXY[1] - b.top; tip.style.left = Math.min(Math.max(8, x + 14), b.width - 250) + 'px'; tip.style.top = Math.max(8, y - 54) + 'px'; }
+      }
+      tip.classList.toggle('hidden', !found); dom.style.cursor = found ? 'help' : '';
+      if (this.world.root) this.world.highlight(null, item);
+    };
+    const dom = r.domElement; let last = null; const ptrs = new Map(); let pinch = 0; let panning = false;
+    dom.addEventListener('pointermove', (e) => { hoverXY = [e.clientX, e.clientY]; hoverDirty = true; });
+    dom.addEventListener('pointerleave', () => { hoverXY = null; hoverDirty = true; });
+    dom.addEventListener('pointerdown', (e) => { try { dom.setPointerCapture(e.pointerId); } catch (err) { /* 무시 */ } ptrs.set(e.pointerId, [e.clientX, e.clientY]); last = [e.clientX, e.clientY]; this.auto = false; panning = e.button === 1; if (panning) e.preventDefault(); });
+    dom.addEventListener('mousedown', (e) => { if (e.button === 1) e.preventDefault(); });   // 가운데 버튼 자동 스크롤 막기
+    dom.addEventListener('pointermove', (e) => {
+      if (!ptrs.has(e.pointerId)) return; ptrs.set(e.pointerId, [e.clientX, e.clientY]);
+      if (ptrs.size === 2) { const [a, b] = [...ptrs.values()]; const dd = Math.hypot(a[0] - b[0], a[1] - b[1]); if (pinch) this.zoom(pinch / dd); pinch = dd; return; }
+      if (panning) {
+        const k = this.dist * 0.0016, dx = e.clientX - last[0], dy = e.clientY - last[1], s = Math.sin(this.ang), c = Math.cos(this.ang);
+        this.center.x += (-c * dx - s * dy) * k; this.center.z += (s * dx - c * dy) * k;
+        const lim = this.view === 'site' && this.site ? this.site.radius * 0.6 : (this.hallDist || 44) * 0.3;
+        const len = Math.hypot(this.center.x, this.center.z);
+        if (len > lim) this.center.multiplyScalar(lim / len);
+        last = [e.clientX, e.clientY]; return;
+      }
+      this.ang -= (e.clientX - last[0]) * 0.008; this.elv = THREE.MathUtils.clamp(this.elv + (e.clientY - last[1]) * 0.006, 0.18, 1.45); last = [e.clientX, e.clientY];
+    });
+    const up = (e) => { ptrs.delete(e.pointerId); pinch = 0; panning = false; };
+    dom.addEventListener('pointerup', up); dom.addEventListener('pointercancel', up);
+    dom.addEventListener('wheel', (e) => { e.preventDefault(); this.zoom(e.deltaY > 0 ? 1.1 : 0.9); this.auto = false; }, { passive: false });
+    new ResizeObserver(() => this.resize()).observe(el); this.resize();
+    const clock = new THREE.Clock();
+    const loop = () => {
+      const dt = Math.min(clock.getDelta(), 0.05);
+      if (this.auto) this.ang += dt * 0.12;
+      const ce = Math.cos(this.elv), se = Math.sin(this.elv);
+      this.camera.position.set(this.center.x + Math.sin(this.ang) * ce * this.dist, se * this.dist, this.center.z + Math.cos(this.ang) * ce * this.dist);
+      this.camera.lookAt(this.center.x, this.lookY, this.center.z);
+      if (this.view === 'hall' && this.world.root) this.world.update(dt, clock.elapsedTime);
+      if (this.view === 'site' && this.site) this.site.tick(dt, clock.elapsedTime);
+      if (hoverDirty) this.pick();
+      r.render(scene, this.camera);
+      if (this.view === 'hall' && this.mode === 'heat' && this.world.overlayScene.children.length) { r.autoClear = false; r.render(this.world.overlayScene, this.camera); r.autoClear = true; }      // 열화상 위에 공기 화살표
+      requestAnimationFrame(loop);
+    };
+    requestAnimationFrame(loop);
+  }
+  zoom(f) { this.dist = THREE.MathUtils.clamp(this.dist * f, this.minDist, this.maxDist); }
+  resize() { const w = this.el.clientWidth || 600, h = this.el.clientHeight || 400; this.renderer.setSize(w, h, false); this.camera.aspect = w / h; this.camera.updateProjectionMatrix(); }
+  /** 실내 배치와 부지 전체를 둘 다 만들어 두고, 고른 보기만 보여 준다 */
+  show(level, input, result) {
+    this.world.build(level, null, 'ko'); this.world.setMode(this.mode); this.hallDist = Math.max(38, level.room.d * 1.9);
+    if (this.site) { this.scene.remove(this.site.group); this.site.dispose(); }
+    this.site = buildSite(input, result); this.scene.add(this.site.group);
+    this.setView(this.view, true);
+  }
+  setView(v, keepAngle = false) {
+    this.view = v; const site = v === 'site';
+    if (this.world.root) { this.world.root.visible = !site; if (site) this.scene.overrideMaterial = null; else this.world.setMode(this.mode); }
+    if (this.site) this.site.group.visible = site;
+    const c = this.sun.shadow.camera;
+    if (site && this.site) {
+      const R = this.site.radius; this.minDist = R * 0.5; this.maxDist = R * 4.5; this.dist = R * 2.15; this.lookY = R * 0.04;
+      this.sun.position.set(R * 0.6, R * 1.3, R * 0.7); c.left = -R * 1.25; c.right = R * 1.25; c.top = R * 1.25; c.bottom = -R * 1.25; c.far = R * 4; this.sun.shadow.normalBias = Math.max(0.03, R * 0.0012);
+      this.scene.background.set(0xcfe2f3);
+    } else {
+      this.minDist = 12; this.maxDist = 90; this.dist = this.hallDist || 44; this.lookY = 1.2;
+      this.sun.position.set(10, 22, 12); c.left = -24; c.right = 24; c.top = 24; c.bottom = -24; c.far = 70; this.sun.shadow.normalBias = 0.03;
+      this.scene.background.set(this.mode === 'heat' ? 0x0a0616 : 0xe8eef5);
+    }
+    c.updateProjectionMatrix();
+    if (!keepAngle) { this.elv = site ? 0.6 : 0.72; this.auto = true; this.center.set(0, 0, 0); }
+  }
+  setMode(m) { this.mode = m; if (this.world.root && this.view === 'hall') { this.world.setMode(m); this.scene.background.set(m === 'heat' ? 0x0a0616 : 0xe8eef5); } }
+  hasFlow(kind) { return this.world.root ? this.world.hasFlow(kind) : false; }
+}

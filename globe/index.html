@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<!-- smc-lang --><style>@media (max-width: 1420px) { #header .language_btn { left: auto; right: 108px; top: 5px; margin-left: 0; } #header .language_btn .kor_btn img { width: 18px; } #header .language_btn .kor_btn span { font-size: 12px; } #header .global_btn { left: auto; right: 100px; top: 30px; margin-left: 0; } }</style><link rel="alternate" hreflang="ko" href="index.html"><link rel="alternate" hreflang="en" href="../en/globe/index.html"><script>(function(){try{var S=window.localStorage,q=/[?&]lang=(ko|en)\b/.exec(location.search);if(q)S.setItem('aik_lang',q[1]);var p=S.getItem('aik_lang');if(p==='ko')return;var L=(navigator.languages&&navigator.languages.length)?navigator.languages:[navigator.language||''],ko=false;for(var i=0;i<L.length;i++){if(/^ko\b/i.test(L[i]))ko=true;}if(!ko||p==='en')location.replace('../en/globe/index.html'+location.hash);}catch(e){}})();</script><!-- smc-lang-end -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI KOREA 국내외 사업장</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Exo+2:wght@400;600;700&display=swap">
+<style>
+  /* 회사개요 페이지 안에 iframe으로 들어가는 사업장 지구본. 색, 글꼴은 기존 사이트 기준 */
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: #fff; overflow: hidden; }
+  body { font-family: 'Exo 2', 'Noto Sans KR', sans-serif; color: #333; }
+  .wrap { display: grid; grid-template-columns: 1fr 360px; height: 100%; }
+  .stage { position: relative; min-width: 0; }
+  #globe { position: absolute; inset: 0; width: 100%; height: 100%; display: block; cursor: grab; touch-action: pan-y; }
+  #globe:active { cursor: grabbing; }
+  .tag {
+    position: absolute; left: 0; top: 0; pointer-events: auto; cursor: pointer; white-space: nowrap; text-align: center;
+    font-size: 15px; font-weight: 700; line-height: 1.25; color: #111; padding: 6px 12px; border-radius: 30px;
+    background: rgba(255, 255, 255, .92); border: 1px solid #c9d6ea; transition: opacity .2s, background-color .2s, color .2s, border-color .2s;
+    will-change: transform;
+  }
+  .tag small { display: block; font-size: 12px; font-weight: 500; color: #666; }
+  .tag.on { background: #083291; border-color: #083291; color: #fff; }
+  .tag.on small { color: #cfdcf5; }
+  .hint { position: absolute; left: 0; bottom: 14px; font-size: 13px; color: #888; }
+
+  .side { align-self: center; padding: 0 0 0 20px; }
+  .side h2 { font-size: 34px; font-weight: 700; color: #222; letter-spacing: -.02em; margin: 0 0 6px; }
+  .side p.sub { font-size: 16px; color: #666; margin: 0 0 22px; }
+  .sites { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+  .sites button {
+    display: block; width: 100%; text-align: left; font: inherit; cursor: pointer; padding: 16px 18px;
+    background: #fafafa; border: 1px solid #ddd; border-left: 4px solid #c9d6ea; border-radius: 8px; color: #333;
+    transition: border-color .15s, background-color .15s;
+  }
+  .sites button:hover { border-color: #1a66c2; background: #fff; }
+  .sites li.on button { border-color: #083291; background: #f4f7fc; }
+  .sites b { display: block; font-size: 19px; color: #222; }
+  .sites span { font-size: 14px; color: #666; }
+  .more { display: inline-block; margin-top: 18px; padding: 10px 26px; border-radius: 30px; background: #083291; color: #fff; font-size: 15px; font-weight: 600; text-decoration: none; }
+  .more:hover { background: #062470; }
+
+  /* WebGL을 쓸 수 없는 환경: 기존 지도 그림으로 대체 */
+  .fallback { display: none; }
+  .no-gl .wrap { display: none; }
+  .no-gl .fallback { display: block; }
+  .no-gl .fallback img { width: 100%; height: auto; display: block; }
+  @media (max-width: 820px) {
+    .wrap { grid-template-columns: 1fr; grid-template-rows: 1fr auto; }
+    .side { padding: 0 12px 12px; }
+    .side h2, .side p.sub { display: none; }
+    .sites { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="stage">
+    <canvas id="globe" aria-label="본사와 폴란드, 헝가리, 미국 법인 위치를 표시한 지구본"></canvas>
+    <div id="tags"></div>
+    <p class="hint">드래그하면 지구본이 회전합니다.</p>
+  </div>
+  <div class="side">
+    <h2>Global Network</h2>
+    <p class="sub">본사와 해외 법인 위치</p>
+    <ul class="sites" id="sites"></ul>
+    <a class="more" id="more" href="../main/page__pid-103.html" target="_top">시설 보기</a>
+  </div>
+</div>
+<div class="fallback">
+  <img src="map_fallback.gif" alt="본사(한국), 폴란드 법인, 헝가리 법인, 미국 법인 위치 지도" usemap="#sitesmap">
+  <map name="sitesmap">
+    <area target="_top" alt="폴란드 법인" href="../main/page__pid-103.html#Facilities02" coords="106,250,30" shape="circle">
+    <area target="_top" alt="헝가리 법인" href="../main/page__pid-103.html#Facilities03" coords="132,300,31" shape="circle">
+    <area target="_top" alt="본사" href="../main/page__pid-103.html#Facilities01" coords="476,319,29" shape="circle">
+    <area target="_top" alt="미국 법인" href="../main/page__pid-103.html#Facilities04" coords="1039,312,31" shape="circle">
+  </map>
+</div>
+<script type="module" src="globe.js"></script>
+</body>
+</html>

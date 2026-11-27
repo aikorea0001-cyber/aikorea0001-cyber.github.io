@@ -1,0 +1,644 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+
+<meta name="aik-page" content="main/page__pid-151.html">
+<title>DC Liquid Cooling | CDU, Manifold and Cooling Water Piping Design and Construction | AI KOREA</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta name="viewport" content="width=device-width, user-scalable=yes, target-densitydpi=device-dpi" />
+<meta name="description" content="We design, supply and build data center liquid cooling loops from primary cooling water piping through CDU and manifold to cold plate, with our own 50 kW in-rack CDU and Envicool high-capacity CDUs.">
+<meta name="keywords" content="">
+<meta property="og:type" content="website">
+<meta property="og:title" content="DC Liquid Cooling | CDU, Manifold and Cooling Water Piping Design and Construction | AI KOREA">
+<meta property="og:description" content="We design, supply and build data center liquid cooling loops from primary cooling water piping through CDU and manifold to cold plate, with our own 50 kW in-rack CDU and Envicool high-capacity CDUs.">
+<meta property="og:image" content="https://www.aik.co.kr/design/og_aik.png">
+<meta property="og:url" content="">
+<link rel="canonical" href="">
+<meta http-equiv="imagetoolbar" content="no" />
+<link rel="stylesheet" type="text/css" href="../../Libs/_style/rankup_style.css" />
+<link rel="stylesheet" type="text/css" href="../../design/skin/skin.css" />
+<link rel="stylesheet" type="text/css" href="../../Libs/_style/rankup_shop.css" />
+<link rel="stylesheet" type="text/css" href="../../design/site/site.css" />
+<script type="text/javascript"> window.top.document.title = document.title </script>
+<script type="text/javascript"> var domain = location.protocol+"//"+location.host+"/"; </script>
+<script type='text/javascript' src='../../Libs/_js/require.js'></script>
+<script type="text/javascript" src="../../Libs/_js/prototype.js"></script>
+<script type="text/javascript" src="../../Libs/_js/jquery.min.js"></script>
+<script type="text/javascript" src="../../Libs/_js/form.js"></script>
+<script type="text/javascript" src="../../Libs/_js/common.js"></script>
+<script type="text/javascript"> var $j = $J = jQuery.noConflict(); </script>
+<link rel="alternate" hreflang="ko" href="../../main/page__pid-151.html"><link rel="alternate" hreflang="en" href="page__pid-151.html"><script>(function(){try{var q=/[?&]lang=(ko|en)\b/.exec(location.search);if(!q)return;localStorage.setItem('aik_lang',q[1]);if(q[1]==='ko')location.replace('../../main/page__pid-151.html'+location.hash);}catch(e){}})();</script><style>@media (max-width: 1420px) { #header .language_btn { left: auto; right: 108px; top: 5px; margin-left: 0; } #header .language_btn .kor_btn img { width: 18px; } #header .language_btn .kor_btn span { font-size: 12px; } #header .global_btn { left: auto; right: 100px; top: 30px; margin-left: 0; } }</style>
+<style id="aik-en">
+html[lang="en"] #header .gnb > li > a { text-transform: uppercase; letter-spacing: 0; padding: 0 21px; font-size: 17px; }
+@media (min-width: 1911px) { html[lang="en"] #aikSocial { margin-left: 694px; gap: 4px; } }
+html[lang="en"] #aikSocial a { font-size: 12px; letter-spacing: 0; }
+@media (min-width: 1911px) { html[lang="en"] #aikSocial a { padding: 0 8px 0 3px; gap: 4px; } }
+html[lang="en"] #body_wrap * { letter-spacing: -0.01em; }
+html[lang="en"] #body_wrap .aik-lt { font: 800 38px/1.2 "Noto Sans KR", sans-serif; letter-spacing: -0.02em; color: #111; }
+html[lang="en"] #body_wrap .eb, html[lang="en"] #aikCta .sh b, html[lang="en"] #aikCta .ptit b { letter-spacing: .1em; }
+html[lang="en"] #header .gnb li ul li a, .lmenu p.secon_m span, .third_tabs li a { letter-spacing: 0 !important; }
+.l_menu_box .lmenu p.secon_m span { white-space: nowrap; }
+html[lang="en"] #header .gnb > li > ul { width: 250px; margin-left: -125px; }
+html[lang="en"] #body_wrap .tri.one { display: block; }
+html[lang="en"] #body_wrap .tri.one input { width: 100%; box-sizing: border-box; }
+html[lang="en"] #body_wrap .aik-en-search { height: 22px; padding: 0 12px; border: 1px solid #999; background: #555; color: #fff; font-size: 12px; cursor: pointer; vertical-align: top; }
+.aik-en-note { margin: 0 0 18px; padding: 12px 16px; border-left: 3px solid #083291; background: #f4f6fb; color: #444; font: 14px/1.6 "Noto Sans KR", sans-serif; text-align: left; }
+.aiken { font-family: "Noto Sans KR", sans-serif; color: #222; padding: 10px 0 60px; text-align: left; line-height: 1.65; clear: both; }
+.aiken * { box-sizing: border-box; }
+.aiken .eb { margin: 0; font-family: "Exo 2", "Noto Sans KR", sans-serif; font-size: 15px; font-weight: 700; letter-spacing: .1em; color: #CC2D29; }
+.aiken h2 { margin: 6px 0 12px; font-size: 38px; line-height: 1.25; font-weight: 800; color: #111; }
+.aiken h3 { margin: 52px 0 10px; font-size: 24px; font-weight: 800; color: #111; }
+.aiken .lead { margin: 0 0 34px; font-size: 18px; color: #444; }
+.aiken p { margin: 0 0 12px; font-size: 16px; color: #444; }
+.aiken .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; margin: 10px 0 34px; }
+.aiken .duo h3 { margin-top: 0; }
+.aiken .duo img { width: 100%; height: auto; border-radius: 12px; display: block; }
+.aiken .tags { list-style: none; margin: 18px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.aiken .tags li { padding: 7px 14px; border: 1px solid #c9d3ea; border-radius: 30px; font-size: 13px; font-weight: 700; color: #083291; background: #f4f6fb; }
+.aiken .steps { list-style: none; margin: 0 0 34px; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; counter-reset: s; }
+.aiken .steps.four { grid-template-columns: repeat(4, 1fr); }
+.aiken .steps li { padding: 20px 20px 22px; border-radius: 12px; background: #0b1f52; color: #fff; }
+.aiken .steps li b { display: block; font-family: "Exo 2", sans-serif; font-size: 18px; letter-spacing: .06em; margin-bottom: 6px; }
+.aiken .steps li span { font-size: 14px; color: #cfd8ee; line-height: 1.5; display: block; }
+.aiken .kv { width: 100%; border-collapse: collapse; border-top: 2px solid #111; margin: 0 0 10px; }
+.aiken .kv th, .aiken .kv td { padding: 13px 14px; border-bottom: 1px solid #e3e6ee; font-size: 15px; text-align: left; vertical-align: top; }
+.aiken .kv th { width: 220px; font-weight: 700; color: #111; background: #f7f8fb; }
+.aiken .cards { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.aiken .cards li { padding: 20px; border: 1px solid #e3e6ee; border-radius: 12px; background: #fff; }
+.aiken .cards li b { display: block; font-size: 16px; color: #083291; margin-bottom: 6px; }
+.aiken .cards li span { font-size: 14px; color: #555; line-height: 1.55; display: block; }
+.aiken .hl { padding: 30px; border-radius: 12px; background: #083291; }
+.aiken .hl h3, .aiken .hl p { color: #fff; }
+.aiken-video { width: 100%; height: 620px; border: 0; display: block; margin: 0 0 30px; }
+</style>
+</head>
+<body>
+<div id="body_wrap" class="thema_1">
+	<div id="header">
+		<div id="top_box">
+			<div id="top_frame">
+				<div class="logo"><table cellspacing='0' cellpadding='0' border='0'>
+			<tr>
+				<td><a href='index.html' target='_self'><img alt="" src='../../RAD/PEG/logo_17467761292855.png' width='220px' height='51px' border='0'></a></td>
+			</tr>
+			</table></div>
+				<div id="gnb_frame">
+					<div class="gnb_wrap">
+						<style>
+/* 1차 메뉴 */
+#header .gnb {
+  z-index: 2;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+#header .gnb > li {
+  position: relative;
+  display: inline-block;
+  height: 80px;
+  line-height: 80px;
+  box-sizing: border-box;
+}
+
+#header .gnb > li > a {
+  display: block;
+  padding: 0 30px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #444444;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+#header .gnb > li > a > i {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  margin-top: -5px;
+  font-size: 14px;
+}
+
+/* 1차 hover */
+#header .gnb > li.hover > a,
+#header .gnb > li:hover > a {
+  color: #CC2D29;
+}
+
+/* 2차 메뉴 */
+#header .gnb > li > ul {
+  display: none;
+  position: absolute;
+  top: 80px;
+  left: 50%;
+  width: 150%;
+  margin-left: -75%;
+  padding: 0;
+  background:rgba(241, 241, 241, 0.95) !important;
+  box-sizing: border-box;
+  box-shadow: 0px 8px 6px -6px #666;
+
+  z-index: 10;
+}
+
+#header .gnb > li:hover > ul {
+  display: block;
+}
+
+#header .gnb > li > ul > li {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 50px;
+  line-height:50px;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+#header .gnb > li > ul > li > a {
+  display: block;
+  position: relative;
+  width: 100%;
+  font-size: 16px;
+  color: #000;
+  text-align: center;
+}
+
+#header .gnb > li > ul > li > a i {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  margin-top: -6px;
+  font-size: 14px;
+}
+
+/* 3차 메뉴 */
+#header .gnb > li > ul > li > ul {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 100%;
+  width: 100%;
+  padding: 15px;
+  background: rgba(241, 241, 241, 0.95) !important;
+  box-sizing: border-box;
+  box-shadow: 0px 8px 6px -6px #666;
+  z-index: 11;
+}
+
+#header .gnb > li > ul > li:hover > ul {
+  display: block;
+}
+#header .gnb > li > ul > li.sub-hover > ul {
+display:block;
+}
+
+#header .gnb > li > ul > li > ul > li {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 30px;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+#header .gnb > li > ul > li > ul > li > a {
+  display: block;
+  position: relative;
+  width: 100%;
+  font-size: 16px;
+  color: #000;
+  line-height: 40px;
+  text-align: center;
+}
+
+/* hover 효과 */
+#header .gnb > li > ul > li:hover > a,
+#header .gnb > li > ul > li.sub-hover > a {
+  color: #CC2D29;
+  font-weight: bold;
+}
+
+#header .gnb > li > ul > li > ul > li:hover > a,
+#header .gnb > li > ul > li > ul > li.ssub-hover > a {
+  color: #CC2D29;
+  font-weight: bold;
+}
+</style>
+<ul class="gnb">
+
+		<li class=""><a href="page__pid-1.html"  target="_self">Company</a>
+		<ul ><li class=""><a href="page__pid-8.html"  target="_self">CEO Message </a></li><li class=""><a href="page__pid-9.html"  target="_self">Company Overview </a></li><li class=""><a href="page__pid-48.html"  target="_self">Our History </a></li><li class=""><a href="page__pid-103.html"  target="_self">Our Facilities </a></li><!-- smc-cases-gnb --><li class=""><a href="cases.html"  target="_self">Project References </a></li><li class=""><a href="page__pid-11.html"  target="_self">Organization Chart </a></li><li class=""><a href="page__pid-12.html"  target="_self">Directions </a></li></ul>
+		</li>
+		<li class="hover"><a href="page__pid-134.html"  target="_self">Business</a>
+		<ul ><!-- smc-menu --><li class="smc-item"><a href="../server/index.html"  target="_self">Supermicro Servers <i class="icon icon-caret-right"></i></a><ul ><li class=""><a href="../server/index.html#/" _self>Overview</a></li><li class=""><a href="../server/index.html#/products" _self>Products</a></li><li class=""><a href="../server/index.html#/dc-lab" _self>DC Build Simulator</a></li><li class=""><a href="../server/index.html#/configure/sys-122h-tn" _self>Build Your Server</a></li><li class=""><a href="../server/index.html#/downloads" _self>Resources</a></li><li class=""><a href="../server/index.html#/robot" _self>Server Replacement Robot</a></li></ul></li><li class="sub-hover"><a href="page__pid-151.html"  target="_self">DC Liquid Cooling <i class="icon icon-caret-right"></i></a><ul ><li class="ssub-hover"><a href="page__pid-152.html" _self>AI DC</a></li></ul></li><li class=""><a href="page__pid-137.html"  target="_self">Logistics Automation Robots <i class="icon icon-caret-right"></i></a><ul ><li class=""><a href="page__pid-139.html" _self>Autonomous Forklift</a></li><li class=""><a href="page__pid-140.html" _self>AI 3D Vision Mixed Palletizing</a></li></ul></li><li class=""><a href="page__pid-135.html"  target="_self">High-Tech Business <i class="icon icon-caret-right"></i></a><ul ><li class=""><a href="page__pid-143.html" _self>CESS</a></li><li class=""><a href="page__pid-144.html" _self>HOOKUP(UT)</a></li><li class=""><a href="page__pid-145.html" _self>Fire Safety Construction</a></li></ul></li><li class=""><a href="page__pid-136.html"  target="_self">System Business <i class="icon icon-caret-right"></i></a><ul ><li class=""><a href="page__pid-146.html" _self>PLASMA</a></li><li class=""><a href="page__pid-147.html" _self>USC</a></li><li class=""><a href="page__pid-148.html" _self>Dust Collector</a></li><li class=""><a href="page__pid-149.html" _self>Scrap Collector</a></li><li class=""><a href="page__pid-150.html" _self>EQUIPMENT</a></li></ul></li></ul>
+		</li>
+		<li class=""><a href="page__pid-3.html"  target="_self">R&D</a>
+		<ul ><li class=""><a href="page__pid-92.html"  target="_self">R&D Center </a></li><li class=""><a href="page__pid-17.html"  target="_self">Certificate & Patent </a></li></ul>
+		</li>
+		<li class=""><a href="page__pid-6.html"  target="_self">IR/PR</a>
+		<ul ><li class=""><a href="page__pid-106.html"  target="_self">Financial Information <i class="icon icon-caret-right"></i></a><ul ><li class=""><a href="page__pid-125.html" _self>Balance Sheet</a></li><li class=""><a href="page__pid-126.html" _self>Income Statement</a></li></ul></li><li class=""><a href="https://dart.fss.or.kr/dsab007/main.do"  target="_blank">Disclosure </a></li><li class=""><a href="../board/index__id-news.html"  target="_self">News </a></li></ul>
+		</li>
+		<li class=""><a href="page__pid-131.html"  target="_self">ESG</a>
+		
+		</li>
+		<li class=""><a href="page__pid-110.html"  target="_self">CAREER</a>
+		<ul ><li class=""><a href="page__pid-111.html"  target="_self">Talent We Seek </a></li><li class=""><a href="page__pid-113.html"  target="_self">Benefits </a></li><li class=""><a href="../board/index__id-jobopening.html"  target="_self">Job Openings </a></li></ul>
+		</li>
+		<li class=""><a href="page__pid-5.html"  target="_self">Support</a>
+		<ul ><li class=""><a href="page__pid-91.html"  target="_self">Ethical Management </a></li><li class=""><a href="../board/index__id-notice.html"  target="_self">Notice </a></li><li class=""><a href="../board/inquiry.html"  target="_self">Request a Quote </a></li><!-- smc-blog-gnb --><li class=""><a href="https://blog.naver.com/aikorea_official"  target="_blank" rel="noopener">Naver Blog </a></li><!-- smc-yt-gnb --><li class=""><a href="https://www.youtube.com/@AIKOREA_Official"  target="_blank" rel="noopener">YouTube </a></li><!-- smc-li-gnb --><li class=""><a href="https://www.linkedin.com/company/ai-korea/"  target="_blank" rel="noopener">LinkedIn </a></li></ul>
+		</li></ul>
+<script>
+
+jQuery(document).ready(function() {
+	jQuery('#header .gnb > li > ul').on('mouseleave', function() {
+		jQuery(this).find('li').each(function(i, el) {
+			if(jQuery(el).attr('subh') !== undefined) {
+				jQuery(el).addClass(jQuery(el).attr('subh'));
+				jQuery(el).removeAttr('subh');
+			}
+		});
+	});
+	jQuery('#header .gnb > li > ul > li').on('mouseenter', function() {
+		if(!jQuery(this).hasClass('sub-hover')) {
+			jQuery(this).siblings().each(function(i, el) {
+				if(jQuery(el).hasClass('sub-hover')) {
+					jQuery(el).attr('subh', 'sub-hover');
+					jQuery(el)	.removeClass('sub-hover');
+				}
+			});
+		}
+	});
+
+});
+
+</script>					</div><!-- gnb_wrap End -->
+				</div><!-- gnb_frame End -->
+				<div class="right_box">
+					<ul class="right">
+																		<li style="width:100px; background:#083291; text-align:center; height:25px; line-height:25px; border-radius:30px;">
+							<a href="page__pid-12.html" style="color:#fff;" rel="nosublink">Contact Us</a>
+						</li>
+						<li class="first" style="width:100px; border:1px solid #ccc; text-align:center; height:25px; line-height:25px; border-radius:30px;">
+							<a href="../etc/sitemap.html" style="color:#999;" rel="nosublink">Sitemap</a>
+						</li>
+					</ul>
+					<div class="language_btn">
+						<div href="" class="kor_btn">
+							<img src="../../images/language.png" alt="global">
+							<span>EN</span>
+						</div>
+					</div>
+					<ul class="global_btn">
+						<li><a href="../../main/page__pid-151.html" hreflang="ko" onclick="try{localStorage.setItem('aik_lang','ko')}catch(e){}this.href=this.href.split('#')[0]+location.hash;">KR</a></li>
+					</ul>
+					<!-- smc-blog-btn --><style>
+#aikSocial { position: absolute; left: 50%; top: 27px; margin-left: 700px; display: flex; gap: 5px; z-index: 3; }
+#aikSocial a { height: 26px; padding: 0 9px 0 3px; border-radius: 26px; display: inline-flex; align-items: center; gap: 5px; font-family: "Noto Sans KR", sans-serif;
+  font-size: 13px; font-weight: 700; letter-spacing: -0.02em; line-height: 1; text-decoration: none; white-space: nowrap; transition: background .2s, transform .2s; }
+#aikSocial a, #aikSocial a span { color: #fff !important; }
+#aikSocial a:hover, #aikSocial a:focus-visible { transform: translateY(-2px); }
+#aikSocial a:focus-visible { outline: 3px solid #2bd2f4; outline-offset: 2px; }
+#aikSocial i { width: 18px; height: 18px; border-radius: 50%; background: #fff; display: grid; place-items: center; font-style: normal; font-family: Arial, sans-serif; font-size: 12px; font-weight: 900; }
+#aikSocial i svg { display: block; margin-left: 1px; }
+#aikSocial a.blog { background: #03C75A; } #aikSocial a.blog:hover, #aikSocial a.blog:focus-visible { background: #02a94c; } #aikSocial a.blog i { color: #03C75A; }
+#aikSocial a.yt { background: #FF0000; } #aikSocial a.yt:hover, #aikSocial a.yt:focus-visible { background: #cc0000; } #aikSocial a.yt i { color: #FF0000; }
+#aikSocial a.li { background: #0A66C2; } #aikSocial a.li:hover, #aikSocial a.li:focus-visible { background: #084d92; } #aikSocial a.li i { color: #0A66C2; }
+@media (max-width: 1910px) { #aikSocial { left: auto; right: 6px; margin-left: 0; } #aikSocial a { padding: 0 3px; } #aikSocial a span { display: none; } }
+@media (max-width: 1586px) { #aikSocial { top: 4px; right: 24px; gap: 4px; } #aikSocial a { height: 22px; padding: 0 2px; } #aikSocial a:hover, #aikSocial a:focus-visible { transform: none; } }
+</style><div id="aikSocial"><a class="blog" href="https://blog.naver.com/aikorea_official" target="_blank" rel="noopener" title="AI KOREA official Naver blog, in Korean (opens in a new window)"><i aria-hidden="true">N</i><span>Blog</span></a><a class="yt" href="https://www.youtube.com/@AIKOREA_Official" target="_blank" rel="noopener" title="AI KOREA official YouTube channel (opens in a new window)"><i aria-hidden="true"><svg viewBox="0 0 10 10" width="8" height="8"><path d="M2.4 1.2v7.6L8.8 5z" fill="#FF0000"/></svg></i><span>YouTube</span></a><a class="li" href="https://www.linkedin.com/company/ai-korea/" target="_blank" rel="noopener" title="AI KOREA official LinkedIn page (opens in a new window)"><i aria-hidden="true" style="font-size:11px;letter-spacing:-.04em">in</i><span>LinkedIn</span></a></div><!-- smc-blog-btn-end -->
+				</div><!-- right_box End -->
+			</div><!-- top_frame End -->
+		</div><!-- top_box End -->
+	</div><!-- header End -->
+	<div class="clear"></div>
+
+
+		<div id="sub_visual_frame">
+			<div class="img_visual"><div style="position:relative;z-index:0;width:1100px;margin: 0 -60px"><img alt="DC Liquid Cooling" src="../../design/page/topb.17467784795732.png" align="absmiddle" /></div></div>
+		</div><!-- sub_visual_frame End -->
+	<div id="content_wrap">
+		<div id="left_wrap">
+					<style type="text/css"> @import url('../../design/left/lnb.css'); </style>
+		<div id="left_menu">
+			
+				<div class="l_tit_box">
+					<h2></h2>
+				</div>
+				<div class="l_menu_box">
+					<ul id="css_lnb_frame" class="lmenu">
+						
+						<!-- smc-lnb --><li><p pid="smc" class="secon_m " hover="" onMouseOver="css_lnb.over(this)" onClick="location.href='../server/index.html'"><span style=block;">Supermicro Servers</span></p></li>
+						<li><p pid="151" class="secon_m hover" hover="hover" onMouseOver="css_lnb.over(this)" onClick="menu_handler(151)"><span style=block;">DC Liquid Cooling</span></p></li>
+						<li sub="151" style="display:none"><dl class="third_m">
+							<dd parent="151" pid="152" class="hover" hover="hover" onMouseOver="css_lnb.over(this)" onClick="menu_handler(152)">AI DC</dd></dl></li>
+						<li><p pid="137" class="secon_m " hover="" onMouseOver="css_lnb.over(this)" onClick="menu_handler(137)"><span style=block;">Logistics Automation Robots</span></p></li>
+						<li sub="137" style="display:none"><dl class="third_m">
+							<dd parent="137" pid="139" class="" hover="" onMouseOver="css_lnb.over(this)" onClick="menu_handler(139)">Autonomous Forklift</dd>
+							<dd parent="137" pid="140" class="" hover="" onMouseOver="css_lnb.over(this)" onClick="menu_handler(140)">AI 3D Vision Mixed Palletizing</dd></dl></li>
+						<li><p pid="135" class="secon_m " hover="" onMouseOver="css_lnb.over(this)" onClick="menu_handler(135)"><span style=block;">High-Tech Business</span></p></li>
+						<li sub="135" style="display:none"><dl class="third_m">
+							<dd parent="135" pid="143" class="" hover="" onMouseOver="css_lnb.over(this)" onClick="menu_handler(143)">CESS</dd>
+							<dd parent="135" pid="144" class="" hover="" onMouseOver="css_lnb.over(this)" onClick="menu_handler(144)">HOOKUP(UT)</dd>
+							<dd parent="135" pid="145" class="" hover="" onMouseOver="css_lnb.over(this)" onClick="menu_handler(145)">Fire Safety Construction</dd></dl></li>
+						<li><p pid="136" class="secon_m " hover="" onMouseOver="css_lnb.over(this)" onClick="menu_handler(136)"><span style=block;">System Business</span></p></li>
+						<li sub="136" style="display:none"><dl class="third_m">
+							<dd parent="136" pid="146" class="" hover="" onMouseOver="css_lnb.over(this)" onClick="menu_handler(146)">PLASMA</dd>
+							<dd parent="136" pid="147" class="" hover="" onMouseOver="css_lnb.over(this)" onClick="menu_handler(147)">USC</dd>
+							<dd parent="136" pid="148" class="" hover="" onMouseOver="css_lnb.over(this)" onClick="menu_handler(148)">Dust Collector</dd>
+							<dd parent="136" pid="149" class="" hover="" onMouseOver="css_lnb.over(this)" onClick="menu_handler(149)">Scrap Collector</dd>
+							<dd parent="136" pid="150" class="" hover="" onMouseOver="css_lnb.over(this)" onClick="menu_handler(150)">EQUIPMENT</dd></dl></li>
+					</ul>
+				</div>		<p class="con_navi"><img src="../../design/skin/img/b_home.png" alt="Home" />home > Business > DC Liquid Cooling > <span class="on_navi  tcolor">AI DC</span></p>
+		</div><!-- left_menu End -->
+		<div class="clear"></div>
+		<script type="text/javascript" src="../../design/skin/css_lnb.js"></script>
+		<script type="text/javascript"> css_lnb.initialize('css_lnb_frame') </script>
+		</div><!-- left_wrap End -->
+
+
+		<div id="contents" class=""><h1 class="aik-h1" style="position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0">DC Liquid Cooling</h1>
+			<div id="p_content_box">
+				<ul class="third_tabs"><li class="first_tab tab_choice"><a href="page__pid-152.html" class="dpn">AI DC</a><a onClick="menu_handler(152)">AI DC</a></li></ul><div class="clear"></div>
+<script type="text/javascript">
+	var j$ = jQuery;
+
+	j$(document).ready(function(){
+	  j$(".language_btn .kor_btn").click(function(){
+		j$(".global_btn").slideToggle();
+	  });
+	});
+</script><!-- smc-cooling -->
+<style>
+.aikx { font-family: "Noto Sans KR", sans-serif; letter-spacing: -0.02em; color: #222; padding: 10px 0 60px; }
+.aikx * { box-sizing: border-box; }
+.aikx .eb { margin: 0; font-family: "Exo 2", "Noto Sans KR", sans-serif; font-size: 15px; font-weight: 700; letter-spacing: .1em; color: #CC2D29; }
+.aikx h2 { margin: 6px 0 12px; font-size: 38px; line-height: 1.3; font-weight: 800; color: #111; }
+.aikx h3 { margin: 56px 0 6px; font-size: 26px; font-weight: 800; color: #111; }
+.aikx h3 + p.sub { margin: 0 0 20px; font-size: 15px; line-height: 1.7; color: #555; }
+.aikx p.lead { margin: 0; font-size: 17px; line-height: 1.8; color: #444; max-width: 900px; }
+.aikx .nums { list-style: none; margin: 30px 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.aikx .nums li { border: 1px solid #e3e6ee; border-left: 4px solid #083291; background: #fff; padding: 24px 24px 20px; }
+.aikx .nums strong { display: block; font-family: "Exo 2", "Noto Sans KR", sans-serif; font-size: 42px; font-weight: 700; line-height: 1.1; color: #111; }
+.aikx .nums em { font-style: normal; font-family: "Noto Sans KR", sans-serif; font-size: 18px; font-weight: 700; color: #CC2D29; margin-left: 5px; }
+.aikx .nums span { display: block; margin-top: 8px; font-size: 14px; color: #555; }
+.aikx table.tb { width: 100%; border-collapse: collapse; border-top: 2px solid #083291; font-size: 14.5px; }
+.aikx table.tb th, .aikx table.tb td { padding: 12px 14px; border-bottom: 1px solid #e3e6ee; text-align: left; vertical-align: top; line-height: 1.55; }
+.aikx table.tb thead th { background: #f4f6fb; font-weight: 700; color: #222; white-space: nowrap; }
+.aikx table.tb td.n, .aikx table.tb th.n { text-align: right; white-space: nowrap; }
+.aikx table.tb tr.sum td { font-weight: 700; background: #f4f6fb; }
+.aikx .scroll { overflow-x: auto; }
+.aikx .cli { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.aikx .cli div { border: 1px solid #e3e6ee; padding: 18px 20px; background: #fff; }
+.aikx .cli b { display: block; font-size: 18px; color: #083291; }
+.aikx .cli span { display: block; margin-top: 4px; font-size: 14px; color: #555; }
+.aikx .gal { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.aikx .gal figure { margin: 0; }
+.aikx .gal img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; background: #e9edf5; }
+.aikx .gal figcaption { margin-top: 8px; font-size: 13.5px; line-height: 1.5; color: #444; }
+.aikx .cta { margin-top: 56px; padding: 30px 34px; background: #06153a; color: #fff; display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+.aikx .cta b { display: block; font-size: 22px; font-weight: 700; color: #fff; }
+.aikx .cta span { display: block; margin-top: 4px; font-size: 14px; color: rgba(255, 255, 255, .82); }
+.aikx .btn { display: inline-block; height: 48px; line-height: 48px; padding: 0 30px; border-radius: 48px; background: #CC2D29; color: #fff !important; font-size: 16px; font-weight: 700; text-decoration: none; transition: background .2s, transform .2s; }
+.aikx .btn:hover, .aikx .btn:focus-visible { background: #fff; color: #CC2D29 !important; transform: translateY(-2px); }
+.aikx .btn.line { background: transparent; border: 1px solid rgba(255, 255, 255, .6); margin-left: 8px; }
+.aikx .note { margin: 10px 0 0; font-size: 13px; color: #777; }
+/* 액체냉각 */
+.aikx .loop { display: grid; grid-template-columns: 1fr 26px 1fr 26px 1fr 26px 1fr 26px 1fr; align-items: stretch; margin-top: 10px; }
+.aikx .loop .nd { border: 1px solid #dfe3ec; background: #fff; padding: 18px 14px; text-align: center; }
+.aikx .loop .nd b { display: block; font-size: 17px; color: #111; }
+.aikx .loop .nd span { display: block; margin-top: 4px; font-size: 13px; color: #666; line-height: 1.5; }
+.aikx .loop .nd.in { border-color: #083291; border-top: 3px solid #083291; background: #f4f7fd; }
+.aikx .loop i { align-self: center; justify-self: center; width: 10px; height: 10px; border-top: 2px solid #083291; border-right: 2px solid #083291; transform: rotate(45deg); }
+.aikx .scope { margin-top: 10px; padding: 11px 16px; background: #083291; color: #fff; font-size: 14.5px; font-weight: 700; text-align: center; }
+.aikx .why { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.aikx .why div { border: 1px solid #e3e6ee; border-top: 3px solid #083291; padding: 20px 20px 18px; background: #fff; }
+.aikx .why .no { font-family: "Exo 2", sans-serif; font-size: 14px; font-weight: 700; color: #CC2D29; }
+.aikx .why b { display: block; margin: 4px 0 8px; font-size: 18px; color: #111; }
+.aikx .why p { margin: 0; font-size: 14px; line-height: 1.7; color: #555; }
+.aikx .two { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: start; }
+.aikx .pics { display: grid; grid-template-columns: 1.4fr 1fr; gap: 10px; }
+.aikx .pics img { display: block; width: 100%; height: 100%; object-fit: cover; background: #e9edf5; }
+.aikx .pics .col { display: grid; gap: 10px; }
+.aikx .kv { width: 100%; border-collapse: collapse; border-top: 2px solid #083291; font-size: 14.5px; }
+.aikx .kv th, .aikx .kv td { padding: 11px 14px; border-bottom: 1px solid #e3e6ee; text-align: left; }
+.aikx .kv th { width: 34%; background: #f4f6fb; font-weight: 500; color: #444; }
+.aikx .tag { display: inline-block; padding: 3px 10px; font-size: 12.5px; font-weight: 700; border-radius: 3px; background: #e6f4ea; color: #1e6b3a; margin-right: 6px; }
+.aikx .tag.dev { background: #fff3d6; color: #8a5a00; }
+.aikx .tag.env { background: #eef3fb; color: #083291; }
+.aikx .parts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.aikx .parts article { border: 1px solid #e3e6ee; background: #fff; }
+.aikx .parts .im { height: 170px; background: #05070c; display: grid; place-items: center; overflow: hidden; }
+.aikx .parts .im img { max-width: 100%; max-height: 100%; display: block; }
+.aikx .parts .tx { padding: 16px 18px 18px; }
+.aikx .parts b { display: block; font-size: 17px; color: #111; }
+.aikx .parts p { margin: 6px 0 0; font-size: 13.5px; line-height: 1.65; color: #555; }
+@media (max-width: 900px) { .aikx h2 { font-size: 28px; } .aikx .nums, .aikx .gal, .aikx .why, .aikx .parts { grid-template-columns: 1fr 1fr; } .aikx .cli, .aikx .two { grid-template-columns: 1fr; }
+  .aikx .loop { grid-template-columns: 1fr; row-gap: 8px; } .aikx .loop i { transform: rotate(135deg); } }
+</style>
+
+<div class="aikx">
+  <p class="eb">DATA CENTER LIQUID COOLING</p>
+  <h2>From cooling water piping to the server rack,<br>liquid cooling under single-point responsibility</h2>
+  <p class="lead">AI KOREA designs, supplies, builds and commissions the entire liquid cooling loop: primary cooling water piping, CDU, manifold and rack-level cold plates. It is built on the piping technology we developed handling secondary battery electrolyte with precision.</p>
+
+  <h3>Liquid Cooling Loop and Our Scope</h3><p class="sub">One company covers the loop from heat rejection to the chip, so responsibility is never split between vendors.</p>
+  <div class="loop">
+    <div class="nd"><b>Cooling tower, chiller</b><span>Cold Source</span></div><i aria-hidden="true"></i>
+    <div class="nd in"><b>Primary Loop</b><span>Primary cooling water piping<br>15A ~ 300A</span></div><i aria-hidden="true"></i>
+    <div class="nd in"><b>CDU</b><span>Heat exchange, flow control</span></div><i aria-hidden="true"></i>
+    <div class="nd in"><b>Secondary Loop</b><span>Manifold, QD</span></div><i aria-hidden="true"></i>
+    <div class="nd in"><b>Cold Plate</b><span>Server rack D2C</span></div>
+  </div>
+  <div class="scope">Blue: designed, supplied, built and commissioned by AI KOREA</div>
+
+  <h3>What Sets AI KOREA Apart</h3><p class="sub">We are not an equipment reseller. We design and build the piping ourselves.</p>
+  <div class="why">
+    <div><span class="no">01</span><b>BIM-based piping design</b><p>We model the whole loop in 3D to catch clashes before construction. The as-built model is used for maintenance during operation.</p></div>
+    <div><span class="no">02</span><b>Precision control from electrolyte handling</b><p>We apply to cooling water loops the temperature and flow control experience gained keeping electrolyte with a 33℃ flash point below 10℃.</p></div>
+    <div><span class="no">03</span><b>Leak-free piping</b><p>Precision welding of STS 304/316, prefab modules and zone-by-zone leak detection reduce the risk of piping that runs above servers.</p></div>
+    <div><span class="no">04</span><b>Projects in four countries</b><p>We bring large-plant piping experience from the United States, Hungary, Poland and China to data centers.</p></div>
+  </div>
+
+  <h3>In-house In-rack CDU</h3><p class="sub">We design and build the cooling equipment ourselves, so specifications can be adjusted to your racks and piping conditions.</p>
+  <div class="two">
+    <div class="pics">
+      <img src="../../design/content/cdu_aik_2.webp" alt="AI KOREA 50 kW in-rack CDU front, touch HMI and breakers" loading="lazy">
+      <div class="col"><img src="../../design/content/cdu_aik_1.webp" alt="AI KOREA 50 kW in-rack CDU exterior" loading="lazy"><img src="../../design/content/cdu_aik_3.webp" alt="AI KOREA 50 kW in-rack CDU rear, primary and secondary piping ports" loading="lazy"></div>
+    </div>
+    <div>
+      <p style="margin:0 0 12px"><span class="tag">Developed</span><b style="font-size:19px">50kW In-rack CDU</b></p>
+      <table class="kv">
+        <tr><th>Cooling capacity</th><td>50 kW</td></tr>
+        <tr><th>Form factor</th><td>19-inch rack mount</td></tr>
+        <tr><th>Circulation pumps</th><td>2 units, redundant (1+1)</td></tr>
+        <tr><th>Heat exchange</th><td>Plate heat exchanger (PHE)</td></tr>
+        <tr><th>Coolant</th><td>Primary chilled water, secondary 25% EG</td></tr>
+        <tr><th>Control and integration</th><td>Touch HMI, DCIM integration</td></tr>
+      </table>
+      <p style="margin:16px 0 0;font-size:14.5px;line-height:1.7;color:#555"><span class="tag dev">In development</span>100 kW in-rack CDU. Based on the 50 kW platform, for high-density GPU racks.</p>
+    </div>
+  </div>
+
+  <h3>Envicool High-capacity CDU</h3><p class="sub"><span class="tag env">Envicool distributor in Korea</span>For large AI data centers that cool many racks together, we supply Envicool in-row CDUs.</p>
+  <div class="scroll"><table class="tb">
+    <thead><tr><th>In-row CDU model</th><th class="n">XCRow0300</th><th class="n">XCRow0600</th><th class="n">XCRow0800</th><th class="n">XCRow1400</th><th class="n">XCRow2500</th></tr></thead>
+    <tbody>
+      <tr><td>Rated heat exchange capacity (kW)</td><td class="n">300</td><td class="n">600</td><td class="n">800</td><td class="n">1,400</td><td class="n">2,500</td></tr>
+      <tr><td>Rated flow (L/min)</td><td class="n">450</td><td class="n">900</td><td class="n">1,000</td><td class="n">1,200</td><td class="n">3,700</td></tr>
+      <tr><td>Dimensions W x D x H (mm)</td><td class="n">600 x 1200 x 2200</td><td class="n">800 x 2000 x 2200</td><td class="n">1200 x 1200 x 2200</td><td class="n">1200 x 1200 x 2200</td><td class="n">1200 x 1200 x 2200</td></tr>
+      <tr><td>Flow control</td><td colspan="5">10% ~ 100%</td></tr>
+      <tr><td>Supply temperature</td><td colspan="5">Primary 32℃, secondary 36℃</td></tr>
+      <tr><td>Power</td><td colspan="5">380 ~ 480 V, 3-phase, 50/60 Hz, optional dual power input</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">Also available: a 4U rack-mount CDU (up to 250 kW per unit) and a liquid-to-air CDU that needs no chilled water piping (rack type, 120 kW). Specifications follow Envicool product documentation and are subject to change.</p>
+
+  <h3>Liquid Cooling Components</h3><p class="sub">We supply and install Envicool Coolinside full-chain components to suit your loop.</p>
+  <div class="parts">
+    <article><div class="im"><img src="../../design/content/env_cdu_inrow.webp" alt="Envicool In-row CDU" loading="lazy"></div><div class="tx"><b>CDU</b><p>Plate heat exchange, redundant pumps, 25 μm filter, anti-condensation control, online water quality monitoring</p></div></article>
+    <article><div class="im"><img src="../../design/content/env_coldplate.webp" alt="Envicool cold plate modules for CPU and GPU" loading="lazy"></div><div class="tx"><b>Cold Plate</b><p>For Intel and AMD server platforms. CPU, GPU and memory cooling modules</p></div></article>
+    <article><div class="im"><img src="../../design/content/env_manifold.webp" alt="Envicool liquid cooling rack and manifold" loading="lazy"></div><div class="tx"><b>Manifold, rack</b><p>SUS304, SUS316L. Quick-connect and blind-mate types, uniform flow distribution</p></div></article>
+    <article><div class="im"><img src="../../design/content/env_qd.webp" alt="Envicool quick disconnect couplings" loading="lazy"></div><div class="tx"><b>Quick Disconnect</b><p>UQD and MQD series. Drip-free on disconnect, in a range of sizes</p></div></article>
+    <article><div class="im"><img src="../../design/content/env_piping.webp" alt="Envicool prefab secondary piping" loading="lazy"></div><div class="tx"><b>Prefab piping</b><p>Factory-built modules assembled on site. Less cutting and welding, shorter schedule</p></div></article>
+    <article><div class="im"><img src="../../design/content/env_leak.webp" alt="Envicool leak detection cable" loading="lazy"></div><div class="tx"><b>Leak detection</b><p>Detection across racks, manifolds, CDUs and all primary and secondary piping</p></div></article>
+    <article><div class="im"><img src="../../design/content/env_cdu_l2a.webp" alt="Envicool Liquid-to-Air CDU" loading="lazy"></div><div class="tx"><b>Liquid-to-Air CDU</b><p>For adding liquid-cooled servers to an existing air-cooled room with no chilled water plant</p></div></article>
+    <article><div class="im"><img src="../../design/content/env_site.webp" alt="Inside a data center with Envicool liquid cooling" loading="lazy"></div><div class="tx"><b>Air cooling</b><p>CRAC and CRAH (6 ~ 200 kW), in-row and fan wall (100 ~ 600 kW) units are also available</p></div></article>
+  </div>
+  <p class="note">Product images: Envicool Full Chain Liquid Cooling Solution.</p>
+
+  <div class="cta"><div><b>Tell us your rack heat load and site conditions.</b><span>We will review CDU capacity, piping routes and server configuration together and reply.</span></div>
+    <div><a class="btn" href="../board/inquiry.html">Request a Quote</a><a class="btn line" href="../server/index.html">Supermicro Servers</a><a class="btn line" href="cases.html">Project References</a></div></div>
+</div>
+<!-- smc-cooling-end -->
+<iframe class="aiken-video" src="https://www.youtube.com/embed/D6euc-bqDVc?si=SAt4P4rcDr5TXFWK" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen=""></iframe>
+</div><!-- p_content_box End -->
+			<div class="clear"></div>
+		</div><!-- contents End -->
+		<div class="clear"></div>
+	</div><!-- content_wrap End -->
+
+
+
+	<div id="footer" class="fbg_col">
+		<div class="footer_line">
+			<div style="float:left;">
+				<td align="left" width="170"><table cellspacing='0' cellpadding='0' border='0'>
+			<tr>
+				<td><a href='index.html' target='_self'><img alt="" src='../../RAD/PEG/logo_17467761724230.png' width='220px' height='51px' border='0'></a></td>
+			</tr>
+			</table></td><td width="15"></td>			</div>
+			<div style="float:right; margin-top:8px;">
+				<a href="../etc/agreement.html">Terms of Use</a> &nbsp;|&nbsp;
+				<a href="../etc/privacy.html"><font style="color: #ccc"><b>Privacy Policy</b></font></a> &nbsp;|&nbsp;
+								<a href="http://www.aik.co.kr/etc/email_reject.html">Refusal of Unauthorized Email Collection</a>
+								&nbsp;|&nbsp;<a href="http://www.aik.co.kr/rankup_module/rankup_direct/direct_pay.html">Direct Pay</a>
+							</div>
+		</div>
+		<div class="copyright">
+			<table width="100%" cellpadding="0" cellspacing="0" border="0">
+				<tr valign="top">
+					<td>
+						<style>
+.footer_rad{width:100%;height:100%;background:#000000;padding:20px 0;}
+.ft_logo{float:left; margin: 50px;}
+.ft_txt{float:right;margin-top: 0px;}
+.ft_txt p{color:#ffffff;font-size: 14px;line-height: 1.8;text-align:right}
+.ft_left{float:left;margin-top: 30px;}
+.ft_left img{margin-right:10px;opacity: 0.7;}
+.ft_left p{color:#c0c0c0;font-size: 16px;line-height: 30px;}
+</style>
+
+<div class="footer_rad">
+<!--
+<div class="ft_left">
+<p>SNS 바로가기</p>
+<a href="https://rankup.co.kr/" target="_blank"><img alt="DC 액체냉각 솔루션" src="../wysiwyg/PEG/se2_17324306533079.png" style="max-width:100%; height:auto;"></a>
+<a href="https://rankup.co.kr/" target="_blank"><img alt="DC 액체냉각 솔루션" src="../wysiwyg/PEG/se2_17324310725557.png" style="max-width:100%; height:auto;"></a>
+<a href="https://rankup.co.kr/" target="_blank"><img alt="DC 액체냉각 솔루션" src="../wysiwyg/PEG/se2_17324306600156.png" style="max-width:100%; height:auto;"></a>
+<a href="https://rankup.co.kr/" target="_blank"><img alt="DC 액체냉각 솔루션" src="../wysiwyg/PEG/se2_17324306641281.png" style="max-width:100%; height:auto;"></a>
+<a href="https://rankup.co.kr/" target="_blank"><img alt="DC 액체냉각 솔루션" src="../wysiwyg/PEG/se2_17324306497740.png" style="max-width:100%; height:auto;"></a>
+</div>
+-->
+<div class="ft_txt">
+<p style="color:#fff; font-size:14px; font-weight:300; margin-top:20px;">Head Office: 94, Saneop-ro, Gwonseon-gu, Suwon-si, Gyeonggi-do, Republic of Korea, AI KOREA Co., Ltd.</p>
+<p style="color:#fff; font-size:14px; font-weight:300;">R&D Center: 5F, Units T-506 & T-507, Giheung Terratower, 11, Seocheon-ro 201beon-gil, Giheung-gu, Yongin-si, Gyeonggi-do, Republic of Korea</p>
+<p style="color:#fff; font-size:14px; font-weight:300;">CEO Jin-ho Ahn / Established 2003.08.15 / Business registration number 135-86-46965</p>
+<p style="color:#fff; font-size:14px; font-weight:300;">Tel. +82-31-376-6360 / Fax. +82-31-376-6362 / E-mail: aik2003@aik.co.kr</p>
+<p style="color:#ababab; font-size:13px; font-weight:400; margin-top:20px;">Copyright ⓒ AI KOREA Co. Ltd. All rights reserved.</p>
+</div>
+
+
+</div>					</td>
+				</tr>
+			</table>
+					</div><!-- copyright End -->
+	</div><!-- footer End -->
+
+</div><!-- body_wrap End -->
+<!-- -->
+<!-- smc-quote-banner -->
+<style>
+#aikFloat { position: fixed; right: 28px; bottom: 28px; z-index: 9000; display: flex; flex-direction: column; align-items: flex-end; gap: 12px;
+  font-family: "Noto Sans KR", sans-serif; letter-spacing: -0.02em; pointer-events: none; }
+#aikFloat > * { pointer-events: auto; }
+#aikTop { width: 54px; height: 54px; padding: 0; border-radius: 50%; border: 1px solid #d5dbe8; background: rgba(255, 255, 255, .96); color: #083291; cursor: pointer;
+  display: grid; place-items: center; align-content: center; gap: 1px; font: inherit; box-shadow: 0 8px 22px rgba(4, 22, 66, .22);
+  opacity: 0; visibility: hidden; transform: translateY(10px); transition: opacity .25s, transform .25s, visibility .25s, background .25s, color .25s, border-color .25s; }
+#aikTop.on { opacity: 1; visibility: visible; transform: none; }
+#aikTop:hover, #aikTop:focus-visible { background: #083291; border-color: #083291; color: #fff; transform: translateY(-3px); }
+#aikTop:focus-visible, #aikQuote:focus-visible { outline: 3px solid #2bd2f4; outline-offset: 3px; }
+#aikTop svg { width: 16px; height: 10px; display: block; }
+#aikTop path { fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+#aikTop span { font-family: "Exo 2", "Noto Sans KR", sans-serif; font-size: 12px; font-weight: 700; line-height: 1; letter-spacing: .04em; }
+#aikQuote { display: flex; align-items: center; gap: 14px; padding: 12px 22px 12px 12px; border-radius: 60px; background: rgba(8, 50, 145, .94); color: #fff; text-decoration: none;
+  border: 1px solid rgba(255, 255, 255, .28); box-shadow: 0 10px 28px rgba(4, 22, 66, .38); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  transition: transform .25s ease-out, background .25s, box-shadow .25s; }
+#aikQuote:hover, #aikQuote:focus-visible { transform: translateY(-4px); background: #CC2D29; box-shadow: 0 14px 32px rgba(120, 20, 18, .42); color: #fff; }
+#aikQuote .ic { width: 46px; height: 46px; flex: none; border-radius: 50%; background: #fff; display: grid; place-items: center; }
+#aikQuote .ic svg { width: 24px; height: 24px; display: block; }
+#aikQuote .ic path { fill: none; stroke: #083291; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; transition: stroke .25s; }
+#aikQuote:hover .ic path { stroke: #CC2D29; }
+#aikQuote .tx { display: block; line-height: 1.25; }
+#aikQuote .tx b { display: block; font-size: 17px; font-weight: 700; color: #fff; }
+#aikQuote .tx small { display: block; margin-top: 2px; font-size: 12px; font-weight: 400; color: rgba(255, 255, 255, .82); }
+#aikQuote .ar { margin-left: 4px; font-size: 18px; line-height: 1; color: #2bd2f4; transition: transform .25s, color .25s; }
+#aikQuote:hover .ar { transform: translateX(4px); color: #fff; }
+#aikFloat.no-quote #aikQuote { display: none; }
+@media (max-width: 640px) { #aikFloat { right: 14px; bottom: 14px; } #aikQuote { padding: 9px 16px 9px 9px; } #aikQuote .tx small { display: none; } #aikQuote .ic { width: 38px; height: 38px; } #aikTop { width: 46px; height: 46px; } }
+@media (prefers-reduced-motion: reduce) { #aikTop, #aikQuote, #aikQuote .ar { transition: none; } }
+</style>
+<div id="aikFloat">
+  <button type="button" id="aikTop" aria-label="Back to top" title="Back to top"><svg viewBox="0 0 16 10" aria-hidden="true"><path d="M2 8l6-6 6 6"/></svg><span>TOP</span></button>
+  <a id="aikQuote" href="../board/inquiry.html" title="Go to the quote request form">
+    <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 3.5h7.5L19 8v12.5H7z"/><path d="M14.5 3.5V8H19"/><path d="M10 12.5h6M10 16h6"/></svg></span>
+    <span class="tx"><b>Request a Quote</b><small>Product and technical inquiries</small></span>
+    <span class="ar" aria-hidden="true">&rarr;</span>
+  </a>
+</div>
+<script type="text/javascript">
+(function () {
+  var box = document.getElementById('aikFloat'), top = document.getElementById('aikTop');
+  if (!box || !top) return;
+  if (/\/board\/inquiry\.html$/.test(location.pathname)) box.className = 'no-quote';
+  var sync = function () { top.className = (window.pageYOffset || document.documentElement.scrollTop) > 200 ? 'on' : ''; };
+  window.addEventListener('scroll', sync, { passive: true });
+  sync();
+  /* [수정안] 메인 하단 간편 견적의뢰란이 보이는 동안은 견적문의 배너를 숨겨 겹치지 않게 한다 */
+  var form = document.getElementById('aikCtaForm');
+  if (form && 'IntersectionObserver' in window) {
+    new IntersectionObserver(function (en) { box.className = en[0].isIntersecting ? 'no-quote' : ''; }, { threshold: 0.15 }).observe(form);
+  }
+  top.addEventListener('click', function () {
+    var calm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    try { window.scrollTo({ top: 0, behavior: calm ? 'auto' : 'smooth' }); } catch (e) { window.scrollTo(0, 0); }
+  });
+})();
+</script>
+<!-- smc-quote-banner-end -->
+</body>
+</html>
